@@ -164,6 +164,7 @@ class Create extends Component {
             const name = this.eventName.value;
             const price = this.state.web3.utils.toWei(this.eventPrice.value.toString(), 'Ether');
             this.createEvent(name, price);
+            window.location = '/events';
           }}>
             <Form.Group className="mb-3 event-input" controlId="formGroupEventName">
               <Form.Control type="text" placeholder="EVENT NAME" ref={(input) => { this.eventName = input }} />
@@ -199,7 +200,7 @@ class Create extends Component {
                 <Form.Group className="mb-3 event-input event-price" controlId="formGroupPrice"
                   style={{ marginLeft: 40 }}
                 >
-                  <Form.Control type="text" placeholder="PRICE (DAI)" />
+                  <Form.Control type="text" placeholder="PRICE (DAI)" ref={(input) => { this.eventPrice = input }} />
                 </Form.Group>
               </div>
             }
