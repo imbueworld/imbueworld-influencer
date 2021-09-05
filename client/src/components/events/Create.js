@@ -4,8 +4,9 @@ import { injected } from "../wallet/connectors";
 import { Container, Form } from "react-bootstrap";
 import '../../bootstrap/dist/css/bootstrap.min.css';
 import ethereum from '../../images/ethereum.jpg';
+import ImbueEventsContract from '../../contracts/ImbuEvents.json';
 import './Create.css';
-import { useInput } from './BindHooks';
+import getWeb3 from "../../getWeb3";
 
 function shortenText(text) {
   var ret = text;
@@ -21,15 +22,47 @@ class Create extends Component {
 
     this.state = {
       walletBalance: 343242,
-      address: 'sjafljsaklfjsakljf;kasjf'
+      address: 'sjafljsaklfjsakljf;kasjf',
+      storageValue: 0, 
+      web3: null, 
+      accounts: null, 
+      contract: null
     };
+
+    this.createEvent = this.createEvent.bind(this);
   }
 
-  submitEvent(event) {
-    event.preventDefault();
-    //const price = window.web3.utils.toWei(price.toString(), 'Ether');
-    //this.props.createEvent(name, price, startTime, endTime);
+  componentWillMount() {
+    this.loadBlockchainData();
   }
+
+  async loadBlockchainData() {
+    const web3 = await getWeb3();
+
+    // Use web3 to get the user's accounts.
+    const accounts = await web3.eth.getAccounts();
+    this.setState({ account: accounts[0] });
+    const networkId = await web3.eth.net.getId();
+    const networkData = ImbueEventsContract.networks[networkId]
+    if(networkData) {
+      const imbueEvents = new web3.eth.Contract(ImbueEventsContract.abi, networkData.address);
+      this.setState({ web3, accounts, contract: imbueEvents });
+    } else {
+      window.alert('ImbueEvents contract not deployed to detected network.')
+    }
+  }
+
+  createEvent(name, price) {
+    var startTime = "starttime";
+    var endTime = "endTime";
+    this.state.contract.methods.createEvent(name, price, startTime, endTime).send({ from: this.state.account })
+    .on('confirmation', function(confirmationNumber, receipt){
+      console.log(receipt);
+    })
+    .on('error', function(error, receipt){
+      console.log(error);
+    })
+  }   
 
   render() {
     return (
@@ -98,12 +131,17 @@ class Create extends Component {
           >
             CREATE EVENT
           </div>
-          <Form onSubmit={this.submitEvent}>
+          <Form onSubmit={(event) => {
+            event.preventDefault();
+            const name = this.eventName.value;
+            const price = this.state.web3.utils.toWei(this.eventPrice.value.toString(), 'Ether');
+            this.createEvent(name, price);
+          }}>
             <Form.Group className="mb-3 event-input" controlId="formGroupEventName">
-              <Form.Control type="text" placeholder="EVENT NAME" />
+              <Form.Control type="text" placeholder="EVENT NAME" ref={(input) => { this.eventName = input }} />
             </Form.Group>
             <Form.Group className="mb-3 event-input" controlId="formGroupDateTime">
-              <Form.Control type="text" placeholder="SELECT DATE/TIME (CALENDAR)" />
+              <Form.Control type="text" placeholder="SELECT DATE/TIME (CALENDAR)" ref={(input) => { this.startTime = input }} />
             </Form.Group>
             <Form.Group className="mb-3 event-input" controlId="formGroupDescription">
               <Form.Control type="text" placeholder="DESCRIPTION" />
@@ -133,7 +171,7 @@ class Create extends Component {
               <Form.Group className="mb-3 event-input" controlId="formGroupPrice"
                 style={{ marginLeft: 40 }}
               >
-                <Form.Control type="text" placeholder="PRICE (DAI)" />
+                <Form.Control type="text" placeholder="PRICE (DAI)" ref={(input) => { this.eventPrice = input }} />
               </Form.Group>
             </div>
             <div style={{

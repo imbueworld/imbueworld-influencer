@@ -7903,12 +7903,13 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x7D580C29C5F4044Efd731474Cd12D8c5D6E5C4dd",
-      "transactionHash": "0x8de560fa5af0fa775323b5a49976eca85fa74dc61a302d9c65f1e30b8fb491e2"
+      "address": "0x6Ff13ADB5eA7Dc6deA5Ace8B9400293a982E83E8",
+      "transactionHash": "0xc174062e3eb44ca5ab4dfade4021087eb70e9c1a8ccc64fde5e4c40bf05bb9c0"
     }
   },
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-09-05T09:08:05.711Z",
+  "updatedAt": "2021-09-05T18:50:10.614Z",
+  "networkType": "ethereum",
   "devdoc": {
     "methods": {}
   },
