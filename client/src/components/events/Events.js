@@ -1,14 +1,9 @@
 import React, {Component} from 'react';
-import { useWeb3React } from "@web3-react/core"
-import { injected } from "../wallet/connectors"
-import { Container, Row, Col, Image } from "react-bootstrap";
-import share from "../../images/share.png";
-import {
-  BrowserRouter as Router,
-  Link,
-} from "react-router-dom";
+import { Link } from "react-router-dom";
+import { Container, Row, Col, Image } from "react-bootstrap";\
 import ImbueEventsContract from '../../contracts/ImbuEvents.json';
 import getWeb3 from "../../getWeb3";
+import share from "../../images/share.png";
 
 const moment = require('moment');
 
