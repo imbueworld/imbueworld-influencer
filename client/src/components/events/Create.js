@@ -1,16 +1,23 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { useWeb3React } from "@web3-react/core";
 import { injected } from "../wallet/connectors";
 import { Container, Form } from "react-bootstrap";
-import metamask from '../../images/metamask.svg';
-import coinbase from '../../images/coinbase.svg';
-import fortmatic from '../../images/fortmatic.png';
-import portis from '../../images/portis.png';
-import walletconnection from '../../images/walletconnection.png';
-import impulse from '../../images/impulse.png';
 import '../../bootstrap/dist/css/bootstrap.min.css';
+import ethereum from '../../images/ethereum.jpg';
+import './Create.css';
+
+function shortenText(text) {
+  var ret = text;
+  if (ret.length > 0) {
+      ret = ret.substr(0, 6) + "..." + ret.substr(text.length - 5, text.length - 1);
+  }
+  return ret;
+}
 
 function Create() {
+  const [walletBalance, setWalletBalance] = useState('aaaa');
+  const [address, setAddress] = useState('0xfadfadfadfadfadfafaaa12312312312312313123123f');
+
   return (
     <div className="connectors">
       <Container
@@ -33,6 +40,33 @@ function Create() {
           }}
         >
           I M B U E
+          <div className="wallet-status">
+            <div style={{ width: 15, height: 15, backgroundColor: "#9CFFA6", borderRadius: "50%", marginTop: 8 }}>
+            </div>
+            <div style={{ 
+              height: 31, 
+              backgroundColor: "#edeef2", 
+              fontSize: 11,
+              lineHeight: "31px",
+              paddingLeft: 10,
+              paddingRight: 10,
+              fontWeight: 500,
+              marginLeft: 10,
+              letterSpacing: 3,
+              width: "270px"
+             }}>
+              <span>{ walletBalance + 'ETH' }</span>
+              <span style={{ 
+                marginLeft: 10, 
+                padding: "5px 8px", 
+                borderRadius: 5, 
+                backgroundColor: "#f7f8fa"
+              }}>
+                <span>{ shortenText(address) }</span>
+                <img style={{ width: 12, marginLeft: 10 }} src={ethereum} />
+              </span>
+            </div>
+          </div>
         </div>
         <div
           style={{
@@ -50,22 +84,22 @@ function Create() {
           CREATE EVENT
         </div>
         <Form>
-          <Form.Group className="mb-3" controlId="formGroupEventName">
+          <Form.Group className="mb-3 event-input" controlId="formGroupEventName">
             <Form.Control type="text" placeholder="Event Name" />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="formGroupDateTime">
+          <Form.Group className="mb-3 event-input" controlId="formGroupDateTime">
             <Form.Control type="text" placeholder="DateTime" />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="formGroupDescription">
+          <Form.Group className="mb-3 event-input" controlId="formGroupDescription">
             <Form.Control type="text" placeholder="Description" />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="formGroupFree">
+          <Form.Group className="mb-3 event-input" controlId="formGroupFree">
             <Form.Control type="text" placeholder="Free" />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="formGroupPaid">
+          <Form.Group className="mb-3 event-input" controlId="formGroupPaid">
             <Form.Control type="text" placeholder="Paid" />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="formGroupPrice">
+          <Form.Group className="mb-3 event-input" controlId="formGroupPrice">
             <Form.Control type="text" placeholder="Price (Dai)" />
           </Form.Group>
         </Form>
