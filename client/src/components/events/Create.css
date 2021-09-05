@@ -1,0 +1,33 @@
+.wallet-status {
+  display: inline-flex;
+  width: 300px;
+}
+
+.event-input {
+  width: 294px !important;
+  font-size: 12px !important;
+  line-height: 17px !important;
+  border-radius: 0 !important;
+  border: none !important;
+  border-bottom: 1px solid #000000 !important;
+  box-shadow: none !important;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: 'MyWebFont';
+}
+
+.event-input:focus {
+  border:  none;
+}
+
+.event-input > input {
+  border: none;
+  box-shadow: none;
+  text-align: center;
+}
+
+.event-input > input:focus {
+  border: none;
+  box-shadow: none;
+}
