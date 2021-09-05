@@ -9,6 +9,7 @@ import Web3 from 'web3'
 
 import Home from './components/home/Home';
 import Events from './components/events/Events';
+import Connectors from "./components/connectors/Connectors"
 
 // import SimpleStorageContract from "./contracts/SimpleStorage.json";
 import getWeb3 from "./getWeb3";
@@ -77,6 +78,9 @@ class App extends Component {
             <Switch>
               <Route path="/events">
                 <Events />
+              </Route>
+              <Route path="/connectors">
+                <Connectors />
               </Route>
               <Route path="/">
                 <Home />
