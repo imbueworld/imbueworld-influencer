@@ -4,10 +4,7 @@ import { injected } from "../wallet/connectors"
 import { Container } from "react-bootstrap";
 import {
   BrowserRouter as Router,
-  Switch,
-  Route,
   Link,
-  Redirect
 } from "react-router-dom";
 
 
@@ -48,6 +45,7 @@ export default function Home() {
             fontSize:40,
             letterSpacing: "7px",
             fontFamily: "MyWebFont",
+            color: "#3c3c3c",
           }}
         >
           I M B U E
@@ -61,8 +59,9 @@ export default function Home() {
             lineHeight: "17px",
             alignItems: "center",
             textAlign: "center",
-            marginTop: 40,
+            marginTop: 50,
             letterSpacing: "5px",
+            color: "#303030",
           }}
         >
           LIVESTREAM TO YOUR FAVORITE
@@ -78,8 +77,8 @@ export default function Home() {
             lineHeight: "31px",
             alignItems: "center",
             textAlign: "center",
-            marginTop: "20px"
-
+            marginTop: 15,
+            letterSpacing: "6px",
           }}
         >
           CONNECT YOUR
@@ -89,10 +88,19 @@ export default function Home() {
           textAlign: "center",
           marginTop: 150
         }}>
-          <Link className="wallet-button" to="/connectors">Connect Wallet</Link>
+          <Link className="wallet-button" to="/connectors"
+            style={{
+              textDecoration: "none",
+              letterSpacing: "1.5px",
+              color: "#919194",
+              fontSize: 10,
+              backgroundColor: "#242429",
+              padding: "10px 20px 10px 20px",
+              borderRadius: "20px",
+            }}
+          >CONNECT WALLET</Link>
         </div>
       </Container>
-
     </div>
   )
 }
