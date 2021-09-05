@@ -130,7 +130,7 @@ class Create extends Component {
               <Form.Group className="mb-3 event-empty" 
                 style={{ marginRight: 40 }}>
               </Form.Group>
-              <Form.Group className="mb-3 event-input" controlId="formGroupPrice"
+              <Form.Group className="mb-3 event-input event-price" controlId="formGroupPrice"
                 style={{ marginLeft: 40 }}
               >
                 <Form.Control type="text" placeholder="PRICE (DAI)" />
