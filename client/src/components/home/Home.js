@@ -11,7 +11,7 @@ import {
 } from "react-router-dom";
 
 
-function Home() {
+export default function Home() {
   const { active, account, library, connector, activate, deactivate } = useWeb3React()
 
   async function connect() {
@@ -22,14 +22,13 @@ function Home() {
     }
   }
 
-  // async function disconnect() {
-  //   try {
-  //     deactivate()
-  //   } catch (ex) {
-  //     console.log(ex)
-  //   }
-  // }
-
+  async function disconnect() {
+    try {
+      deactivate()
+    } catch (ex) {
+      console.log(ex)
+    }
+  }
 
   return (
     <div className="home">
@@ -95,7 +94,5 @@ function Home() {
       </Container>
 
     </div>
-  );
+  )
 }
-
-export default Home;
