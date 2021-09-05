@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
-import { useWeb3React } from "@web3-react/core";
-import { injected } from "../wallet/connectors";
 import { Container, Form } from "react-bootstrap";
-import '../../bootstrap/dist/css/bootstrap.min.css';
-import ethereum from '../../images/ethereum.jpg';
 import ImbueEventsContract from '../../contracts/ImbuEvents.json';
-import './Create.css';
 import getWeb3 from "../../getWeb3";
+
+import '../../bootstrap/dist/css/bootstrap.min.css';
+import './Create.css';
+
+import ethereum from '../../images/ethereum.jpg';
 
 function shortenText(text) {
   var ret = text;
@@ -21,8 +21,8 @@ class Create extends Component {
     super(props);
 
     this.state = {
-      walletBalance: 343242,
-      address: 'sjafljsaklfjsakljf;kasjf',
+      walletBalance: 0,
+      address: '',
       isFreeOrPaid: false,
       storageValue: 0, 
       web3: null, 
@@ -55,6 +55,19 @@ class Create extends Component {
     // Use web3 to get the user's accounts.
     const accounts = await web3.eth.getAccounts();
     this.setState({ account: accounts[0] });
+    
+    // Get Wallet Address and Balance
+    this.setState({ address: web3.currentProvider.selectedAddress});
+
+    const thisstate = this;
+    web3.eth.getBalance(web3.currentProvider.selectedAddress, function(err, result) {
+      if (err) {
+        console.log(err)
+      } else {
+        thisstate.setState({ walletBalance: web3.utils.fromWei(result, "ether")});
+      }
+    })
+
     const networkId = await web3.eth.net.getId();
     const networkData = ImbueEventsContract.networks[networkId]
     if(networkData) {
@@ -159,14 +172,14 @@ class Create extends Component {
               <Form.Control type="text" placeholder="SELECT DATE/TIME (CALENDAR)" ref={(input) => { this.startTime = input }} />
             </Form.Group>
             <div className="row">
-              <a className="mb-3 event-input btn-paid" controlId="formGroupFree"
+              <a className="mb-3 event-input btn-paid"
                 onClick={this.setFree}
                 style={{ marginRight: 40 }}
               >
                 <span className='btn-word-left'>FREE</span>
                 <span className='btn-word-right'>PAID</span>
               </a>
-              <a className="mb-3 event-input btn-paid" controlId="formGroupPaid"
+              <a className="mb-3 event-input btn-paid"
                 style={{ marginLeft: 40 }}
                 onClick={this.setPaid}
               >
