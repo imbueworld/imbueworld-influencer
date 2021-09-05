@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Link } from "react-router-dom";
-import { Container, Row, Col, Image } from "react-bootstrap";\
+import { Container, Row, Col, Image } from "react-bootstrap";
 import ImbueEventsContract from '../../contracts/ImbuEvents.json';
 import getWeb3 from "../../getWeb3";
 import share from "../../images/share.png";
