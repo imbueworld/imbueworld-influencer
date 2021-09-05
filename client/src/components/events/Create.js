@@ -40,32 +40,32 @@ function Create() {
           }}
         >
           I M B U E
-          <div className="wallet-status">
-            <div style={{ width: 15, height: 15, backgroundColor: "#9CFFA6", borderRadius: "50%", marginTop: 8 }}>
-            </div>
-            <div style={{ 
-              height: 31, 
-              backgroundColor: "#edeef2", 
-              fontSize: 11,
-              lineHeight: "31px",
-              paddingLeft: 10,
-              paddingRight: 10,
-              fontWeight: 500,
-              marginLeft: 10,
-              letterSpacing: 3,
-              width: "270px"
-             }}>
-              <span>{ walletBalance + 'ETH' }</span>
-              <span style={{ 
-                marginLeft: 10, 
-                padding: "5px 8px", 
-                borderRadius: 5, 
-                backgroundColor: "#f7f8fa"
-              }}>
-                <span>{ shortenText(address) }</span>
-                <img style={{ width: 12, marginLeft: 10 }} src={ethereum} />
-              </span>
-            </div>
+        </div>
+        <div className="wallet-status">
+          <div style={{ width: 15, height: 15, backgroundColor: "#9CFFA6", borderRadius: "50%", marginTop: 8 }}>
+          </div>
+          <div style={{ 
+            height: 31, 
+            backgroundColor: "#edeef2", 
+            fontSize: 11,
+            lineHeight: "31px",
+            paddingLeft: 10,
+            paddingRight: 10,
+            fontWeight: 500,
+            marginLeft: 10,
+            letterSpacing: 3,
+            width: "270px"
+            }}>
+            <span>{ Math.round(walletBalance * 100000) / 100000 + 'ETH' }</span>
+            <span style={{ 
+              marginLeft: 10, 
+              padding: "5px 8px", 
+              borderRadius: 5, 
+              backgroundColor: "#f7f8fa"
+            }}>
+              <span>{ shortenText(address) }</span>
+              <img style={{ width: 12, marginLeft: 10 }} src={ethereum} />
+            </span>
           </div>
         </div>
         <div
@@ -79,29 +79,49 @@ function Create() {
             textAlign: "center",
             marginTop: 70,
             letterSpacing: "7px",
+            marginBottom: 20
           }}
         >
           CREATE EVENT
         </div>
         <Form>
           <Form.Group className="mb-3 event-input" controlId="formGroupEventName">
-            <Form.Control type="text" placeholder="Event Name" />
+            <Form.Control type="text" placeholder="EVENT NAME" />
           </Form.Group>
           <Form.Group className="mb-3 event-input" controlId="formGroupDateTime">
-            <Form.Control type="text" placeholder="DateTime" />
+            <Form.Control type="text" placeholder="SELECT DATE/TIME (CALENDAR)" />
           </Form.Group>
           <Form.Group className="mb-3 event-input" controlId="formGroupDescription">
-            <Form.Control type="text" placeholder="Description" />
+            <Form.Control type="text" placeholder="DESCRIPTION" />
           </Form.Group>
-          <Form.Group className="mb-3 event-input" controlId="formGroupFree">
-            <Form.Control type="text" placeholder="Free" />
-          </Form.Group>
-          <Form.Group className="mb-3 event-input" controlId="formGroupPaid">
-            <Form.Control type="text" placeholder="Paid" />
-          </Form.Group>
-          <Form.Group className="mb-3 event-input" controlId="formGroupPrice">
-            <Form.Control type="text" placeholder="Price (Dai)" />
-          </Form.Group>
+          <div className="row">
+            <button className="mb-3 event-input btn-paid" controlId="formGroupFree"
+              style={{ marginRight: 40 }}
+            >
+              <span className='btn-word-left'>FREE</span>
+              <span className='btn-word-right'>PAID</span>
+            </button>
+            <button className="mb-3 event-input btn-paid" controlId="formGroupPaid"
+              style={{ marginLeft: 40 }}
+            >
+              <span className='btn-word-left'
+                style={{ color: "#f0f0f0" }}
+              >FREE</span>
+              <span className='btn-word-right'
+                style={{ color: "#000000" }}
+              >PAID</span>
+            </button>
+          </div>
+          <div className="row">
+            <Form.Group className="mb-3 event-empty" 
+              style={{ marginRight: 40 }}>
+            </Form.Group>
+            <Form.Group className="mb-3 event-input" controlId="formGroupPrice"
+              style={{ marginLeft: 40 }}
+            >
+              <Form.Control type="text" placeholder="PRICE (DAI)" />
+            </Form.Group>
+          </div>
           <div style={{
                 textAlign: "center",
                 marginTop: 50
