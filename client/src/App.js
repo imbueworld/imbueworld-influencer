@@ -10,7 +10,7 @@ import Web3 from 'web3'
 import Home from './components/home/Home';
 import Events from './components/events/Events';
 
-// import SimpleStorageContract from "./contracts/SimpleStorage.json";
+// import ImbuEventsContract from "./contracts/ImbuEvents.json";
 import getWeb3 from "./getWeb3";
 
 import "./App.css";
@@ -32,9 +32,9 @@ class App extends Component {
 
   //     // Get the contract instance.
   //     const networkId = await web3.eth.net.getId();
-  //     const deployedNetwork = SimpleStorageContract.networks[networkId];
+  //     const deployedNetwork = ImbuEventsContract.networks[networkId];
   //     const instance = new web3.eth.Contract(
-  //       SimpleStorageContract.abi,
+  //       ImbuEventsContract.abi,
   //       deployedNetwork && deployedNetwork.address,
   //     );
 
