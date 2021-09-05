@@ -65,7 +65,7 @@
 
 @media only screen and (max-width: 750px) {
   .btn-paid {
-    text-align: center;
+    width: 147px !important;
   }
 }
 
