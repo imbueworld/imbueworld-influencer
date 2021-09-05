@@ -5,6 +5,7 @@ import { Container, Form } from "react-bootstrap";
 import '../../bootstrap/dist/css/bootstrap.min.css';
 import ethereum from '../../images/ethereum.jpg';
 import './Create.css';
+import { useInput } from './BindHooks';
 
 function shortenText(text) {
   var ret = text;
@@ -17,6 +18,17 @@ function shortenText(text) {
 function Create() {
   const [walletBalance, setWalletBalance] = useState(0.00023454);
   const [address, setAddress] = useState('0xfadfadfadfadfadfafaaa12312312312312313123123f');
+  const { value:name, bind:bindName, reset:resetName } = useInput('');
+  const { value:price, bind:bindPrice, reset:resetPrice } = useInput('');
+  const { value:startTime, bind:bindStartTime, reset:resetStartTime } = useInput('');
+  const { value:endTime, bind:bindEndTime, reset:resetEndTime } = useInput('');
+  
+
+  function submitEvent(event) {
+    event.preventDefault();
+    const price = window.web3.utils.toWei(price.toString(), 'Ether');
+    this.props.createEvent(name, price, startTime, endTime);
+  }
 
   return (
     <div className="connectors">
@@ -83,15 +95,15 @@ function Create() {
         >
           CREATE EVENT
         </div>
-        <Form>
+        <Form onSubmit={submitEvent}>
           <Form.Group className="mb-3 event-input" controlId="formGroupEventName">
-            <Form.Control type="text" placeholder="Event Name" />
+            <Form.Control type="text" placeholder="Event Name" {...bindName} />
           </Form.Group>
           <Form.Group className="mb-3 event-input" controlId="formGroupDateTime">
-            <Form.Control type="text" placeholder="DateTime" />
+            <Form.Control type="text" placeholder="Start Time" {...bindStartTime}/>
           </Form.Group>
-          <Form.Group className="mb-3 event-input" controlId="formGroupDescription">
-            <Form.Control type="text" placeholder="Description" />
+          <Form.Group className="mb-3 event-input" controlId="formGroupDateTime">
+            <Form.Control type="text" placeholder="End Time" {...bindEndTime}/>
           </Form.Group>
           <Form.Group className="mb-3 event-input" controlId="formGroupFree">
             <Form.Control type="text" placeholder="Free" />
@@ -100,13 +112,13 @@ function Create() {
             <Form.Control type="text" placeholder="Paid" />
           </Form.Group>
           <Form.Group className="mb-3 event-input" controlId="formGroupPrice">
-            <Form.Control type="text" placeholder="Price (Dai)" />
+            <Form.Control type="text" placeholder="Price (Dai)" {...bindPrice}/>
           </Form.Group>
           <div style={{
                 textAlign: "center",
                 marginTop: 50
               }}>
-                <button className="wallet-button" to="/event/create"
+                <button className="wallet-button" type="submit"
                   style={{
                     textDecoration: "none",
                     letterSpacing: "1.5px",
