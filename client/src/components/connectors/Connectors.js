@@ -8,6 +8,7 @@ import fortmatic from '../../images/fortmatic.png';
 import portis from '../../images/portis.png';
 import walletconnection from '../../images/walletconnection.png';
 import impulse from '../../images/impulse.png';
+import getWeb3 from '../../getWeb3';
 import './Connectors.css';
 
 function WrongNetwork(props) {
@@ -44,11 +45,20 @@ function WrongNetwork(props) {
         MUST BE ON THE <br/>OPTIMISM NETWORK
       </div>
     </div>
-    
   );
 }
 
 function Connectors() {
+  const { active, account, library, connector, activate, deactivate } = useWeb3React()
+  
+  async function connectWallet (e) {
+    try {
+      await activate(injected)
+    } catch (ex) {
+      console.log(ex)
+    }
+  }
+
   return (
     <div className="connectors">
       <Container
@@ -96,7 +106,7 @@ function Connectors() {
             <a style={{ color: "#FE4B39", textDecoration: "none" }} href="disc"> Uniswap protocol disclaimer.
             </a>
           </div>
-          <a className="connect-button"
+          <a className="connect-button" href="#" onClick={connectWallet}
               style={{ 
                 marginTop: 20,
               }}>

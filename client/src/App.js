@@ -12,7 +12,7 @@ import Events from './components/events/Events';
 import Connectors from "./components/connectors/Connectors";
 import Create from './components/events/Create';
 
-// import ImbuEventsContract from "./contracts/ImbuEvents.json";
+import ImbuEventsContract from "./contracts/ImbuEvents.json";
 import getWeb3 from "./getWeb3";
 
 import "./App.css";
@@ -24,13 +24,13 @@ function getLibrary(provider) {
 class App extends Component {
   state = { storageValue: 0, web3: null, accounts: null, contract: null };
 
-  // componentDidMount = async () => {
-  //   try {
+  componentDidMount = async () => {
+     try {
   //     // Get network provider and web3 instance.
-  //     const web3 = await getWeb3();
+       const web3 = await getWeb3();
 
   //     // Use web3 to get the user's accounts.
-  //     const accounts = await web3.eth.getAccounts();
+      const accounts = await web3.eth.getAccounts();
 
   //     // Get the contract instance.
   //     const networkId = await web3.eth.net.getId();
@@ -43,14 +43,14 @@ class App extends Component {
   //     // Set web3, accounts, and contract to the state, and then proceed with an
   //     // example of interacting with the contract's methods.
   //     this.setState({ web3, accounts, contract: instance }, this.runExample);
-  //   } catch (error) {
+     } catch (error) {
   //     // Catch any errors for any of the above operations.
   //     alert(
   //       `Failed to load web3, accounts, or contract. Check console for details.`,
   //     );
   //     console.error(error);
-  //   }
-  // };
+    }
+  };
 
   // runExample = async () => {
   //   const { accounts, contract } = this.state;
@@ -63,7 +63,7 @@ class App extends Component {
 
   //   // Update state with the result.
   //   this.setState({ storageValue: response });
-  // };
+  //};
 
 
   
