@@ -8,45 +8,7 @@ import fortmatic from '../../images/fortmatic.png';
 import portis from '../../images/portis.png';
 import walletconnection from '../../images/walletconnection.png';
 import impulse from '../../images/impulse.png';
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-function WrongNetwork(props) {
-  if (!props.networkStatus) {
-    return null;
-  }
-
-  return (
-    <div>
-      <div className="wrong"
-          style={{ 
-            marginTop: 10,
-            textAlign: "center",
-            backgroundColor: "#e26861",
-            color: "#ffffff",
-            fontSize: 20,
-            padding:10,
-            borderRadius: 15,
-            width: 230,
-            marginLeft: "auto",
-            marginRight: "auto"
-           }}>
-        <img style={{ width: 20 }} src={impulse}/>
-        &nbsp;&nbsp;Wrong Network
-      </div>
-      <div style={{
-            textAlign: "center",
-            color: "#f21321",
-            fontSize: 25,
-            marginTop: 10,
-            letterSpacing: "6px",
-            fontFamily: "MyWebFont"
-      }}>
-        MUST BE ON THE <br/>OPTIMISM NETWORK
-      </div>
-    </div>
-    
-  );
-}
+import '../../bootstrap/dist/css/bootstrap.min.css';
 
 function Create() {
   return (
