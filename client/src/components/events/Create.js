@@ -4,8 +4,9 @@ import { injected } from "../wallet/connectors";
 import { Container, Form } from "react-bootstrap";
 import '../../bootstrap/dist/css/bootstrap.min.css';
 import ethereum from '../../images/ethereum.jpg';
+import ImbueEventsContract from '../../contracts/ImbuEvents.json';
 import './Create.css';
-import { useInput } from './BindHooks';
+import getWeb3 from "../../getWeb3";
 
 function shortenText(text) {
   var ret = text;
@@ -23,13 +24,17 @@ class Create extends Component {
       walletBalance: 343242,
       address: 'sjafljsaklfjsakljf;kasjf',
       isFreeOrPaid: false,
+      storageValue: 0, 
+      web3: null, 
+      accounts: null, 
+      contract: null
     };
+
+    this.createEvent = this.createEvent.bind(this);
   }
 
-  submitEvent(event) {
-    event.preventDefault();
-    //const price = window.web3.utils.toWei(price.toString(), 'Ether');
-    //this.props.createEvent(name, price, startTime, endTime);
+  componentWillMount() {
+    this.loadBlockchainData();
   }
 
   setFree = () => {
@@ -43,6 +48,34 @@ class Create extends Component {
       isFreeOrPaid: true
     });
   }
+
+  async loadBlockchainData() {
+    const web3 = await getWeb3();
+
+    // Use web3 to get the user's accounts.
+    const accounts = await web3.eth.getAccounts();
+    this.setState({ account: accounts[0] });
+    const networkId = await web3.eth.net.getId();
+    const networkData = ImbueEventsContract.networks[networkId]
+    if(networkData) {
+      const imbueEvents = new web3.eth.Contract(ImbueEventsContract.abi, networkData.address);
+      this.setState({ web3, accounts, contract: imbueEvents });
+    } else {
+      window.alert('ImbueEvents contract not deployed to detected network.')
+    }
+  }
+
+  createEvent(name, price) {
+    var startTime = "starttime";
+    var endTime = "endTime";
+    this.state.contract.methods.createEvent(name, price, startTime, endTime).send({ from: this.state.account })
+    .on('confirmation', function(confirmationNumber, receipt){
+      console.log(receipt);
+    })
+    .on('error', function(error, receipt){
+      console.log(error);
+    })
+  }   
 
   render() {
     const {isFreeOrPaid, walletBalance, address} = this.state;
@@ -113,22 +146,27 @@ class Create extends Component {
           >
             CREATE EVENT
           </div>
-          <Form onSubmit={this.submitEvent}>
+          <Form onSubmit={(event) => {
+            event.preventDefault();
+            const name = this.eventName.value;
+            const price = this.state.web3.utils.toWei(this.eventPrice.value.toString(), 'Ether');
+            this.createEvent(name, price);
+          }}>
             <Form.Group className="mb-3 event-input" controlId="formGroupEventName">
-              <Form.Control type="text" placeholder="EVENT NAME" />
+              <Form.Control type="text" placeholder="EVENT NAME" ref={(input) => { this.eventName = input }} />
             </Form.Group>
             <Form.Group className="mb-3 event-input" controlId="formGroupDateTime">
-              <Form.Control type="text" placeholder="SELECT DATE/TIME (CALENDAR)" />
+              <Form.Control type="text" placeholder="SELECT DATE/TIME (CALENDAR)" ref={(input) => { this.startTime = input }} />
             </Form.Group>
             <div className="row">
-              <button className="mb-3 event-input btn-paid" controlId="formGroupFree"
+              <a className="mb-3 event-input btn-paid" controlId="formGroupFree"
                 onClick={this.setFree}
                 style={{ marginRight: 40 }}
               >
                 <span className='btn-word-left'>FREE</span>
                 <span className='btn-word-right'>PAID</span>
-              </button>
-              <button className="mb-3 event-input btn-paid" controlId="formGroupPaid"
+              </a>
+              <a className="mb-3 event-input btn-paid" controlId="formGroupPaid"
                 style={{ marginLeft: 40 }}
                 onClick={this.setPaid}
               >
@@ -138,7 +176,7 @@ class Create extends Component {
                 <span className='btn-word-right'
                   style={{ color: "#000000" }}
                 >PAID</span>
-              </button>
+              </a>
             </div>
             { isFreeOrPaid && 
               <div className="row">
