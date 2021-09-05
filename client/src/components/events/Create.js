@@ -21,7 +21,8 @@ class Create extends Component {
 
     this.state = {
       walletBalance: 343242,
-      address: 'sjafljsaklfjsakljf;kasjf'
+      address: 'sjafljsaklfjsakljf;kasjf',
+      isFreeOrPaid: false,
     };
   }
 
@@ -31,7 +32,21 @@ class Create extends Component {
     //this.props.createEvent(name, price, startTime, endTime);
   }
 
+  setFree = () => {
+    this.setState({
+      isFreeOrPaid: false
+    });
+  }
+
+  setPaid = () => {
+    this.setState({
+      isFreeOrPaid: true
+    });
+  }
+
   render() {
+    const {isFreeOrPaid, walletBalance, address} = this.state;
+
     return (
       <div className="connectors">
         <Container
@@ -105,11 +120,9 @@ class Create extends Component {
             <Form.Group className="mb-3 event-input" controlId="formGroupDateTime">
               <Form.Control type="text" placeholder="SELECT DATE/TIME (CALENDAR)" />
             </Form.Group>
-            <Form.Group className="mb-3 event-input" controlId="formGroupDescription">
-              <Form.Control type="text" placeholder="DESCRIPTION" />
-            </Form.Group>
             <div className="row">
               <button className="mb-3 event-input btn-paid" controlId="formGroupFree"
+                onClick={this.setFree}
                 style={{ marginRight: 40 }}
               >
                 <span className='btn-word-left'>FREE</span>
@@ -117,6 +130,7 @@ class Create extends Component {
               </button>
               <button className="mb-3 event-input btn-paid" controlId="formGroupPaid"
                 style={{ marginLeft: 40 }}
+                onClick={this.setPaid}
               >
                 <span className='btn-word-left'
                   style={{ color: "#f0f0f0" }}
@@ -126,16 +140,18 @@ class Create extends Component {
                 >PAID</span>
               </button>
             </div>
-            <div className="row">
-              <Form.Group className="mb-3 event-empty" 
-                style={{ marginRight: 40 }}>
-              </Form.Group>
-              <Form.Group className="mb-3 event-input event-price" controlId="formGroupPrice"
-                style={{ marginLeft: 40 }}
-              >
-                <Form.Control type="text" placeholder="PRICE (DAI)" />
-              </Form.Group>
-            </div>
+            { isFreeOrPaid && 
+              <div className="row">
+                <Form.Group className="mb-3 event-empty" 
+                  style={{ marginRight: 40 }}>
+                </Form.Group>
+                <Form.Group className="mb-3 event-input event-price" controlId="formGroupPrice"
+                  style={{ marginLeft: 40 }}
+                >
+                  <Form.Control type="text" placeholder="PRICE (DAI)" />
+                </Form.Group>
+              </div>
+            }
             <div style={{
                   textAlign: "center",
                   marginTop: 50

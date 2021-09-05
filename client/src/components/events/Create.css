@@ -57,6 +57,7 @@
   background-color: transparent;
   padding: .55rem .75rem;
   line-height: 17px !important;
+  cursor: pointer;
 }
 
 .btn-paid:hover {
