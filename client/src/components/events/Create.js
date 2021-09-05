@@ -15,7 +15,7 @@ function shortenText(text) {
 }
 
 function Create() {
-  const [walletBalance, setWalletBalance] = useState('aaaa');
+  const [walletBalance, setWalletBalance] = useState(0.00023454);
   const [address, setAddress] = useState('0xfadfadfadfadfadfafaaa12312312312312313123123f');
 
   return (
@@ -102,6 +102,22 @@ function Create() {
           <Form.Group className="mb-3 event-input" controlId="formGroupPrice">
             <Form.Control type="text" placeholder="Price (Dai)" />
           </Form.Group>
+          <div style={{
+                textAlign: "center",
+                marginTop: 50
+              }}>
+                <button className="wallet-button" to="/event/create"
+                  style={{
+                    textDecoration: "none",
+                    letterSpacing: "1.5px",
+                    color: "#919194",
+                    fontSize: 10,
+                    backgroundColor: "#242429",
+                    padding: "10px 20px 10px 20px",
+                    borderRadius: "20px",
+                  }}
+                >CREATE EVENT</button>
+              </div>
         </Form>
       </Container>
     </div>
