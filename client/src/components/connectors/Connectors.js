@@ -50,10 +50,11 @@ function WrongNetwork(props) {
 
 function Connectors() {
   const { active, account, library, connector, activate, deactivate } = useWeb3React()
-  
+
   async function connectWallet (e) {
     try {
-      await activate(injected)
+      await activate(injected);
+      window.location = '/events';
     } catch (ex) {
       console.log(ex)
     }
