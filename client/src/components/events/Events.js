@@ -1,7 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import { useWeb3React } from "@web3-react/core"
 import { injected } from "../wallet/connectors"
-import { Container } from "react-bootstrap";
+import { Container, Row, Col, Image } from "react-bootstrap";
+import share from "../../images/share.png";
 import {
   BrowserRouter as Router,
   Link,
@@ -9,7 +10,18 @@ import {
 const moment = require('moment');
 
 function Events() {
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState([
+    {
+      id: 1,
+      name: "MAX 's ABS & CORE ",
+      date: ""    
+    },
+    {
+      id: 1,
+      name: "MAXsdf 's ABS & CORE ",
+      date: ""    
+    },
+  ]);
 
   return (
     <div className="home">
@@ -70,10 +82,52 @@ function Events() {
                   >CREATE EVENTS</Link>
                 </div>
                 {events.map(event => (
-                  <div>
-
-                    <div>{event.name}</div>
-                    <div>{moment(event.date).format('MMMM Do YYYY, h:mm:ss a')}</div>
+                  <div
+                    style={{
+                      backgroundColor: "#000",
+                      borderRadius: 20,
+                      marginTop: 40,
+                      height: 80,
+                    }}
+                  >
+                    <Row>
+                      <Col>
+                        <h4 style={{ color: "#FFFFFF", marginTop: 13, width: 500 }}>
+                          {event.name}
+                        </h4>
+                      </Col>
+                      <Col style={{ color: "#FFFFFF", marginTop: 8 }}>
+                        <h3 style={{ textAlign: "center", marginLeft: 10 }}>
+                          JULY 12TH 2021 <br /> 8PM-10PM
+                        </h3>
+                      </Col>
+                      <Col style={{ color: "#FFFFFF", marginTop: 20 }}>
+                        <Image
+                          src={share}
+                          style={{ width: 30, height: 30, marginLeft: 80 }}
+                        />
+                      </Col>
+                      <Col
+                        style={{
+                          marginTop: 20,
+                          backgroundColor: "#FFFFFF",
+                          borderRadius: 20,
+                          height: 40,
+                          width: 10,
+                          marginLeft: 80,
+                        }}
+                      >
+                        <h5
+                          style={{
+                            color: "#000",
+                            textAlign: "center",
+                            marginTop: 10,
+                          }}
+                        >
+                          CREATE EVENT
+                        </h5>
+                      </Col>
+                    </Row>
                   </div>
                 ))}
             </div>)
