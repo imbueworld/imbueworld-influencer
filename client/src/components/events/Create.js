@@ -30,8 +30,8 @@ class Create extends Component {
       web3: null, 
       accounts: null, 
       contract: null,
-      startDate: '',
-      endDate: ''
+      startDate: new Date(),
+      endDate: new Date()
     };
 
     this.createEvent = this.createEvent.bind(this);
