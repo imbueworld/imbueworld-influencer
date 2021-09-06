@@ -1,5 +1,4 @@
-import React, {Component} from 'react';
-import { withRouter } from 'react-router';
+import React, {Component} from 'react';giut 
 import { Link } from "react-router-dom";
 import { Container, Row, Col, Image } from "react-bootstrap";
 import ImbueEventsContract from '../../contracts/ImbuEvents.json';

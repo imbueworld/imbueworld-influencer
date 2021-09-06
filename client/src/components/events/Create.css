@@ -84,3 +84,7 @@
   letter-spacing: 2px;
   font-size: 15px;
 }
+
+.error-message {
+  color: rgb(255, 0, 0);
+}
