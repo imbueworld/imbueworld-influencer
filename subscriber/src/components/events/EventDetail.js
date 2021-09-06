@@ -6,7 +6,7 @@ import {
   BrowserRouter as Router,
   Link,
 } from "react-router-dom";
-import './Purchase.css';
+import './EventDetail.css';
 import avatar from "../../images/back.jpeg";
 import ethereum from "../../images/ethereum.jpg"
 
@@ -18,7 +18,7 @@ function shortenText(text) {
   return ret;
 }
 
-export default function Purchase() {
+export default function EventDetail() {
   const { active, account, library, connector, activate, deactivate } = useWeb3React();
   const [walletBalance, setWalletBalance] = useState(0.324234);
   const [address, setAddress] = useState('0xfdaf435wssdfsdfsdfsd');

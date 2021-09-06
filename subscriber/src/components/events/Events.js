@@ -1,17 +1,28 @@
 import React, {Component} from 'react';
 import { Link } from "react-router-dom";
 import { Container, Row, Col, Image } from "react-bootstrap";
+import { withRouter } from 'react-router';
 import ImbueEventsContract from '../../contracts/ImbuEvents.json';
 import getWeb3 from "../../getWeb3";
 import share from "../../images/share.png";
 
-const moment = require('moment');
+import ethereum from '../../images/ethereum.jpg';
+
+function shortenText(text) {
+  var ret = text;
+  if (ret.length > 0) {
+      ret = ret.substr(0, 6) + "..." + ret.substr(text.length - 5, text.length - 1);
+  }
+  return ret;
+}
 
 class Events extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      walletBalance: 0,
+      address: '',
       events: [],
     }
 
@@ -29,6 +40,19 @@ class Events extends Component {
     // Use web3 to get the user's accounts.
     const accounts = await web3.eth.getAccounts();
     this.setState({ account: accounts[0] });
+
+    // Get Wallet Address and Balance
+    this.setState({ address: web3.currentProvider.selectedAddress});
+
+    const thisstate = this;
+    web3.eth.getBalance(web3.currentProvider.selectedAddress, function(err, result) {
+      if (err) {
+        console.log(err)
+      } else {
+        thisstate.setState({ walletBalance: web3.utils.fromWei(result, "ether")});
+      }
+    })
+
     const networkId = await web3.eth.net.getId();
     const networkData = ImbueEventsContract.networks[networkId]
     if(networkData) {
@@ -61,6 +85,14 @@ class Events extends Component {
     })
   }
 
+  // Redirect eventDetail page
+  redirectToEventDetail(id, name, owner) {
+    // Redirect to EventDetail Page
+    var redirectLink = "/event/" + owner + '/' + id + '/' + name;
+    redirectLink = redirectLink.replace(/ /g, '')
+    this.props.history.push(redirectLink);
+  }
+
   render() {
     const {events} = this.state;
     return (
@@ -86,6 +118,33 @@ class Events extends Component {
           >
             I M B U E
           </div>
+          <div className="wallet-status">
+            <div style={{ width: 15, height: 15, backgroundColor: "#9CFFA6", borderRadius: "50%", marginTop: 8 }}>
+            </div>
+            <div style={{ 
+              height: 31, 
+              backgroundColor: "#edeef2", 
+              fontSize: 11,
+              lineHeight: "31px",
+              paddingLeft: 10,
+              paddingRight: 10,
+              fontWeight: 500,
+              marginLeft: 10,
+              letterSpacing: 3,
+              width: "285px"
+              }}>
+              <span>{ Math.round(this.state.walletBalance * 1000000) / 1000000 + 'ETH' }</span>
+              <span style={{ 
+                marginLeft: 10, 
+                padding: "5px 8px", 
+                borderRadius: 5, 
+                backgroundColor: "#f7f8fa"
+              }}>
+                <span>{ shortenText(this.state.address) }</span>
+                <img style={{ width: 12, marginLeft: 10 }} src={ethereum} />
+              </span>
+            </div>
+          </div>
           <div
             style={{
               fontFamily: "LuloCleanW01-One",
@@ -106,7 +165,7 @@ class Events extends Component {
             events.length > 0 ?
               ( <div>
                   {events.map((event, index) => (
-                    <div
+                    <div onClick={() => this.redirectToEventDetail(event.id, event.name, event.owner)}
                       key={index}
                       style={{
                         backgroundColor: "#242429",
@@ -195,4 +254,4 @@ class Events extends Component {
   }
 }
 
-export default Events;
+export default withRouter(Events);
