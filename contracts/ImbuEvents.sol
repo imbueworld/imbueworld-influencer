@@ -1,5 +1,4 @@
-pragma solidity ^0.5.0;
-
+pragma solidity >=0.7.0 <0.9.0;
 contract ImbuEvents {
   string public name;
   uint public eventCount = 0;
@@ -9,8 +8,8 @@ contract ImbuEvents {
     uint id;
     string name;
     uint price;
-    address payable owner;
-    address[] subscribers;
+    address owner;
+    address [] subscribers;
     uint subscriberCounts;
     string startTime;
     string endTime;
@@ -23,21 +22,21 @@ contract ImbuEvents {
     uint price,
     string startTime,
     string endTime,
-    address payable owner
+    address owner
   );
 
   event EventPurchased(
     uint id,
     string name,
     uint price,
-    address payable subscriber
+    address subscriber
   );
 
   event EventStarted(
     uint id,
     string name,
     uint price,
-    address payable owner
+    address owner
   );
 
   constructor() public {
@@ -59,7 +58,7 @@ contract ImbuEvents {
     // Get the event
     Event memory _event = events[_id];
     // Get the owner
-    address payable _owner = _event.owner;
+    address _owner = _event.owner;
     // Validation id, enough Ether, 
     require(_event.id > 0 && _event.id <= eventCount);
     // Require that there is enough Ether in the transaction
@@ -72,7 +71,7 @@ contract ImbuEvents {
     // Update the event
     events[_id] = _event;
     // Pay the owner by sending them Ether
-    address(_owner).transfer(msg.value);
+    payable(_owner).transfer(msg.value);
 
     emit EventPurchased(_id, _event.name, _event.price, msg.sender);
   }
