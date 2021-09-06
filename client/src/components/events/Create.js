@@ -109,22 +109,24 @@ class Create extends Component {
   
   submitForm = (event) => {
     event.preventDefault();
-    const name = this.eventName.value;
-    const price = this.state.web3.utils.toWei(this.eventPrice.value.toString(), 'Ether');
-    if (name === '') {
+    if (this.eventName.value === '') {
       this.setState({
         errorName: 'This field is required.'
-      })
-    } else if (price === '') {
-      this.setState({
-        errorPrice: 'This field is required.'
-      })
-    } else
+      });
+    } else if (this.eventPrice && this.eventPrice.value !== '') {
+      const name = this.eventName.value;
+      const price = this.state.web3.utils.toWei(this.eventPrice.value.toString(), 'Ether');
       this.createEvent(name, price, this.state.startDate.toString(), this.state.endDate.toString());
+    } else {
+      this.setState({
+        errorName: '',
+        errorPrice: 'This field is required.'
+      });
+    }
   }
 
   render() {
-    const {isFreeOrPaid} = this.state;
+    const {isFreeOrPaid, errorName, errorPrice} = this.state;
 
     return (
       <div className="connectors">
@@ -195,6 +197,7 @@ class Create extends Component {
           <Form onSubmit={(event) => this.submitForm(event)} >
             <Form.Group className="mb-3 event-input" controlId="formGroupEventName">
               <Form.Control type="text" placeholder="EVENT NAME" ref={(input) => { this.eventName = input }} />
+              { errorName !== '' && <span className='error-message'>This field is required.</span>}
             </Form.Group>
             <Form.Group className="mb-3 event-input" controlId="formGroupDateTime">
               <DatetimeRangePicker onChange={(event) => this.changeDateRange(event)} />
@@ -250,7 +253,8 @@ class Create extends Component {
                 <Form.Group className="mb-3 event-input event-price" controlId="formGroupPrice"
                   style={{ marginLeft: 40 }}
                 >
-                  <Form.Control type="text" placeholder="PRICE (DAI)" ref={(input) => { this.eventPrice = input }} />
+                  <Form.Control type="number" min={0} step='0.000001' placeholder="PRICE (DAI)" ref={(input) => { this.eventPrice = input }} />
+                  { errorPrice !== '' && <span className='error-message'>This field is required.</span>}
                 </Form.Group>
               </div>
             }
