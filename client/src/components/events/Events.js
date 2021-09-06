@@ -122,7 +122,8 @@ class Events extends Component {
                     >CREATE EVENTS</Link>
                   </div>
                   {events.map((event, index) => (
-                    <div key={index.toString()}
+                    <div
+                      key={index}
                       style={{
                         backgroundColor: "#242429",
                         borderRadius: 20,

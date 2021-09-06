@@ -173,26 +173,49 @@ class Create extends Component {
             <Form.Group className="mb-3 event-input" controlId="formGroupDateTime">
               <DatetimeRangePicker onChange />
             </Form.Group>
-            <div className="row">
-              <a className="mb-3 event-input btn-paid"
-                onClick={this.setFree}
-                style={{ marginRight: 40 }}
-              >
-                <span className='btn-word-left'>FREE</span>
-                <span className='btn-word-right'>PAID</span>
-              </a>
-              <a className="mb-3 event-input btn-paid"
-                style={{ marginLeft: 40 }}
-                onClick={this.setPaid}
-              >
-                <span className='btn-word-left'
-                  style={{ color: "#f0f0f0" }}
-                >FREE</span>
-                <span className='btn-word-right'
-                  style={{ color: "#000000" }}
-                >PAID</span>
-              </a>
-            </div>
+            { isFreeOrPaid ? 
+              (<div className="row">
+                <a className="mb-3 event-input btn-paid"
+                  onClick={this.setFree}
+                  style={{ marginRight: 40 }}
+                >
+                  <span className='btn-word-left'>FREE</span>
+                  <span className='btn-word-right'>PAID</span>
+                </a>
+                <a className="mb-3 event-input btn-paid"
+                  style={{ marginLeft: 40, backgroundColor: 'grey' }}
+                  onClick={this.setPaid}
+                >
+                  <span className='btn-word-left'
+                    style={{ color: "#f0f0f0" }}
+                  >FREE</span>
+                  <span className='btn-word-right'
+                    style={{ color: "#000000" }}
+                  >PAID</span>
+                </a>
+              </div>)
+              :
+              (<div className="row">
+                <a className="mb-3 event-input btn-paid"
+                  onClick={this.setFree}
+                  style={{ marginRight: 40, backgroundColor: 'grey' }}
+                >
+                  <span className='btn-word-left'>FREE</span>
+                  <span className='btn-word-right'>PAID</span>
+                </a>
+                <a className="mb-3 event-input btn-paid"
+                  style={{ marginLeft: 40 }}
+                  onClick={this.setPaid}
+                >
+                  <span className='btn-word-left'
+                    style={{ color: "#f0f0f0" }}
+                  >FREE</span>
+                  <span className='btn-word-right'
+                    style={{ color: "#000000" }}
+                  >PAID</span>
+                </a>
+              </div>)
+            }
             { isFreeOrPaid && 
               <div className="row">
                 <Form.Group className="mb-3 event-empty" 
