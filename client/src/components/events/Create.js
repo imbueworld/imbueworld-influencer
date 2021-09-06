@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { withRouter } from 'react-router';
 import { Container, Form,  } from "react-bootstrap";
 import ImbueEventsContract from '../../contracts/ImbuEvents.json';
 import getWeb3 from "../../getWeb3";
@@ -34,9 +35,6 @@ class Create extends Component {
       endDate: new Date()
     };
 
-    this.createEvent = this.createEvent.bind(this);
-    this.submitForm = this.submitForm.bind(this);
-    this.changeDateRange = this.changeDateRange(this);
   }
 
   componentWillMount() {
@@ -55,7 +53,7 @@ class Create extends Component {
     });
   }
 
-  async loadBlockchainData() {
+  loadBlockchainData = async() => {
     const web3 = await getWeb3();
 
     // Use web3 to get the user's accounts.
@@ -84,19 +82,22 @@ class Create extends Component {
     }
   }
 
-  createEvent(name, price, startDate, endDate) {
+  createEvent = (name, price, startDate, endDate) => {
     this.state.contract.methods.createEvent(name, price, startDate, endDate).send({ from: this.state.account })
-    .on('confirmation', function(confirmationNumber, receipt){
+    .on('receipt', function(){
       // redirect to events page
-      window.location = '/events';
-      console.log(receipt);
+      var redirectLink = '/events';
+      this.props.history.push(redirectLink);
+    })
+    .on('confirmation', function(confirmationNumber, receipt){
+      console.log('confirmation');
     })
     .on('error', function(error, receipt){
-      console.log(error);
+      console.log("error");
     })
   }
 
-  changeDateRange(event) {
+  changeDateRange = (event) => {
     // get changed datetime and save to state
     this.setState({
       startDate: moment(event.start).format('YYYY-MM-DD H:mm:ss'),
@@ -104,7 +105,7 @@ class Create extends Component {
     });
   }
   
-  submitForm(event) {
+  submitForm = (event) => {
     event.preventDefault();
     const name = this.eventName.value;
     const price = this.state.web3.utils.toWei(this.eventPrice.value.toString(), 'Ether');
@@ -265,4 +266,4 @@ class Create extends Component {
   }
 }
 
-export default Create;
+export default withRouter(Create);
