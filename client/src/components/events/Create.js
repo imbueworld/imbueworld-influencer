@@ -3,6 +3,7 @@ import { Container, Form,  } from "react-bootstrap";
 import ImbueEventsContract from '../../contracts/ImbuEvents.json';
 import getWeb3 from "../../getWeb3";
 import DatetimeRangePicker from 'react-datetime-range-picker';
+import moment from 'moment';
 
 import '../../bootstrap/dist/css/bootstrap.min.css';
 import './Create.css';
@@ -28,7 +29,9 @@ class Create extends Component {
       storageValue: 0, 
       web3: null, 
       accounts: null, 
-      contract: null
+      contract: null,
+      startDate: '',
+      endDate: ''
     };
 
     this.createEvent = this.createEvent.bind(this);
@@ -80,10 +83,8 @@ class Create extends Component {
     }
   }
 
-  createEvent(name, price) {
-    var startTime = "starttime";
-    var endTime = "endTime";
-    this.state.contract.methods.createEvent(name, price, startTime, endTime).send({ from: this.state.account })
+  createEvent(name, price, startDate, endDate) {
+    this.state.contract.methods.createEvent(name, price, startDate, endDate).send({ from: this.state.account })
     .on('confirmation', function(confirmationNumber, receipt){
       // redirect to events page
       window.location = '/events';
@@ -94,15 +95,20 @@ class Create extends Component {
     })
   }
 
-  changeDateRange() {
-
+  changeDateRange(event) {
+    // get changed datetime and save to state
+    this.setState({
+      startDate: moment(event.start).format('YYYY-MM-DD H:mm:ss'),
+      endDate: moment(event.end).format('YYYY-MM-DD H:mm:ss')
+    });
   }
   
   submitForm(event) {
     event.preventDefault();
     const name = this.eventName.value;
     const price = this.state.web3.utils.toWei(this.eventPrice.value.toString(), 'Ether');
-    this.createEvent(name, price);
+    const [startDate, endDate, ...other] = this.state;
+    this.createEvent(name, price, startDate, endDate);
   }
 
   render() {
@@ -179,7 +185,7 @@ class Create extends Component {
               <Form.Control type="text" placeholder="EVENT NAME" ref={(input) => { this.eventName = input }} />
             </Form.Group>
             <Form.Group className="mb-3 event-input" controlId="formGroupDateTime">
-              <DatetimeRangePicker onChange />
+              <DatetimeRangePicker onChange={(event) => this.changeDateRange(event)} />
             </Form.Group>
             { isFreeOrPaid ? 
               (<div className="row">
