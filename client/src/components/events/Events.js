@@ -119,6 +119,7 @@ class Events extends Component {
                   </div>
                   {events.map(event => (
                     <div
+                      key={event.id}
                       style={{
                         backgroundColor: "#242429",
                         borderRadius: 20,
