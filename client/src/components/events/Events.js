@@ -12,7 +12,18 @@ class Events extends Component {
     super(props);
 
     this.state = {
-      events: [],
+      events: [
+      {
+        id: 1,
+        name: 'adsfadsfasdfadsfasdfasdf',
+        date: '',
+      },
+      {
+        id: 2,
+        name: 'asdfadsfadsfasdfadsfasdfasdf',
+        date: '',
+      }
+    ],
     }
   }
 
@@ -109,47 +120,45 @@ class Events extends Component {
                   {events.map(event => (
                     <div
                       style={{
-                        backgroundColor: "#000",
+                        backgroundColor: "#242429",
                         borderRadius: 20,
                         marginTop: 40,
-                        height: 80,
+                        height: 60,
                       }}
                     >
                       <Row>
-                        <Col>
-                          <h4 style={{ color: "#FFFFFF", marginTop: 13, width: 500 }}>
+                        <Col sm={5}>
+                          <h4 style={{ color: "#FFFFFF", marginTop: 13, textAlign: 'left', paddingLeft: 30, letterSpacing: 2 }}>
                             {event.name}
                           </h4>
                         </Col>
-                        <Col style={{ color: "#FFFFFF", marginTop: 8 }}>
-                          <h3 style={{ textAlign: "center", marginLeft: 10 }}>
+                        <Col sm={3} style={{ color: "#FFFFFF", marginTop: 8 }}>
+                          <h5 style={{ textAlign: "center", marginLeft: 10, color: "#919194" }}>
                             JULY 12TH 2021 <br /> 8PM-10PM
-                          </h3>
+                          </h5>
                         </Col>
-                        <Col style={{ color: "#FFFFFF", marginTop: 20 }}>
+                        <Col sm={1} style={{ color: "#FFFFFF", marginTop: 15 }}>
                           <Image
                             src={share}
-                            style={{ width: 30, height: 30, marginLeft: 80 }}
+                            style={{ width: 30, height: 30 }}
                           />
                         </Col>
                         <Col
-                          style={{
-                            marginTop: 20,
-                            backgroundColor: "#FFFFFF",
-                            borderRadius: 20,
-                            height: 40,
-                            width: 10,
-                            marginLeft: 80,
-                          }}
+                         sm={3}
                         >
                           <h5
                             style={{
-                              color: "#000",
+                              backgroundColor: "#f9f9f9",
+                              color: "#1f1f1f",
                               textAlign: "center",
-                              marginTop: 10,
+                              marginTop: 13,
+                              marginRight: 30,
+                              padding: "5px 0px 5px 0px",
+                              borderRadius: 20,
+                              cursor: 'pointer'
                             }}
                           >
-                            CREATE EVENT
+                            START EVENT
                           </h5>
                         </Col>
                       </Row>

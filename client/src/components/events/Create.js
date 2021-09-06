@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import { Container, Form } from "react-bootstrap";
+import { Container, Form,  } from "react-bootstrap";
 import ImbueEventsContract from '../../contracts/ImbuEvents.json';
 import getWeb3 from "../../getWeb3";
+import DatetimeRangePicker from 'react-datetime-range-picker';
 
 import '../../bootstrap/dist/css/bootstrap.min.css';
 import './Create.css';
@@ -21,8 +22,8 @@ class Create extends Component {
     super(props);
 
     this.state = {
-      walletBalance: 0,
-      address: '',
+      walletBalance: 23.4234243,
+      address: 'fasdfadfasdfasdfadfasdfasdfasdfasdfasfadfafdf',
       isFreeOrPaid: false,
       storageValue: 0, 
       web3: null, 
@@ -129,9 +130,9 @@ class Create extends Component {
               fontWeight: 500,
               marginLeft: 10,
               letterSpacing: 3,
-              width: "270px"
+              width: "285px"
               }}>
-              <span>{ Math.round(this.state.walletBalance * 100000) / 100000 + 'ETH' }</span>
+              <span>{ Math.round(this.state.walletBalance * 1000000) / 1000000 + 'ETH' }</span>
               <span style={{ 
                 marginLeft: 10, 
                 padding: "5px 8px", 
@@ -170,7 +171,7 @@ class Create extends Component {
               <Form.Control type="text" placeholder="EVENT NAME" ref={(input) => { this.eventName = input }} />
             </Form.Group>
             <Form.Group className="mb-3 event-input" controlId="formGroupDateTime">
-              <Form.Control type="text" placeholder="SELECT DATE/TIME (CALENDAR)" ref={(input) => { this.startTime = input }} />
+              <DatetimeRangePicker onChange />
             </Form.Group>
             <div className="row">
               <a className="mb-3 event-input btn-paid"
