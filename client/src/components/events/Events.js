@@ -25,10 +25,13 @@ class Events extends Component {
       }
     ],
     }
+
+    this.loadBlockchainData = this.loadBlockchainData.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.loadBlockchainData();
+    console.log('events page will mount');
   }
 
   async loadBlockchainData() {
@@ -43,11 +46,12 @@ class Events extends Component {
       const imbueEvents = new web3.eth.Contract(ImbueEventsContract.abi, networkData.address);
       this.setState({ web3, accounts, contract: imbueEvents });
       
-      const eventCount = await imbueEvents.methods.eventCount().call()
-      this.setState({ eventCount })
+      const eventCount = await imbueEvents.methods.eventCount().call();
+      console.log(eventCount); 
+      this.setState({ eventCount });
       // Load events
       for (var i = 1; i <= eventCount; i++) {
-        const event = await imbueEvents.methods.events(i).call()
+        const event = await imbueEvents.methods.events(i).call();
         this.setState({
           events: [...this.state.events, event]
         })
@@ -117,8 +121,8 @@ class Events extends Component {
                       }}
                     >CREATE EVENTS</Link>
                   </div>
-                  {events.map(event => (
-                    <div
+                  {events.map((event, index) => (
+                    <div key={index.toString()}
                       style={{
                         backgroundColor: "#242429",
                         borderRadius: 20,

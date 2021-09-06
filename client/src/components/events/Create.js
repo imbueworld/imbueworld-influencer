@@ -22,8 +22,8 @@ class Create extends Component {
     super(props);
 
     this.state = {
-      walletBalance: 23.4234243,
-      address: 'fasdfadfasdfasdfadfasdfasdfasdfasdfasfadfafdf',
+      walletBalance: 0,
+      address: '',
       isFreeOrPaid: false,
       storageValue: 0, 
       web3: null, 
