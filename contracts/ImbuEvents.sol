@@ -68,7 +68,7 @@ contract ImbuEvents {
       }
     }
 
-    if (!isPurchased) {
+    if (isPurchased == false) {
       // Add address to subscribers
       _event.subscriberCounts++;
       _event.subscribers.push(msg.sender);
