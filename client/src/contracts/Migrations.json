@@ -59,7 +59,7 @@
   "sourceMap": "27:326:1:-;;;187:52;8:9:-1;5:2;;;30:1;27;20:12;5:2;187:52:1;223:10;215:5;;:18;;;;;;;;;;;;;;;;;;27:326;;;;;;",
   "deployedSourceMap": "27:326:1:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;27:326:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;77:36;;;:::i;:::-;;;;;;;;;;;;;;;;;;;52:20;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;245:105;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;245:105:1;;;;;;;;;;;;;;;;;:::i;:::-;;77:36;;;;:::o;52:20::-;;;;;;;;;;;;;:::o;245:105::-;167:5;;;;;;;;;;;153:19;;:10;:19;;;149:26;;;335:9;308:24;:36;;;;149:26;245:105;:::o",
   "source": "pragma solidity ^0.5.0;\r\n\r\ncontract Migrations {\r\n  address public owner;\r\n  uint public last_completed_migration;\r\n\r\n  modifier restricted() {\r\n    if (msg.sender == owner) _;\r\n  }\r\n\r\n  constructor() public {\r\n    owner = msg.sender;\r\n  }\r\n\r\n  function setCompleted(uint completed) public restricted {\r\n    last_completed_migration = completed;\r\n  }\r\n}\r\n",
-  "sourcePath": "D:\\Projects\\Blockchain\\imbueworld-influencer\\contracts\\Migrations.sol",
+  "sourcePath": "E:\\react\\task\\imbueworld-influencer\\contracts\\Migrations.sol",
   "ast": {
     "absolutePath": "project:/contracts/Migrations.sol",
     "exportedSymbols": {
@@ -952,12 +952,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x1802580A3312F003BCF3fBe8BeD27e9CFc77DFB8",
-      "transactionHash": "0xe79fc5d919d2128d8e7221484d8d6827896b8e15d55911bdcd295a7c02c9ab88"
+      "address": "0x255A85d5a1C6D1BDc0d11ad3cfFAa8E5aBD618FC",
+      "transactionHash": "0x39bbef560b575c6e99c198256b5a1471cb135c2de158de80e702559097f9bdef"
     }
   },
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-09-06T17:12:39.723Z",
+  "updatedAt": "2021-09-06T18:34:27.067Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}

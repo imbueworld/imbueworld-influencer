@@ -184,7 +184,7 @@ class Events extends Component {
                       textDecoration: "none",
                       letterSpacing: "1.5px",
                       color: "#919194",
-                      fontSize: 10,
+                      fontSize: 20,
                       backgroundColor: "#242429",
                       padding: "10px 20px 10px 20px",
                       borderRadius: "20px",

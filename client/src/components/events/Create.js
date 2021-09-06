@@ -31,7 +31,9 @@ class Create extends Component {
       accounts: null, 
       contract: null,
       startDate: new Date(),
-      endDate: new Date()
+      endDate: new Date(),
+      errorName: '',
+      errorPrice: ''
     };
 
     this.createEvent = this.createEvent.bind(this);
@@ -108,11 +110,20 @@ class Create extends Component {
     event.preventDefault();
     const name = this.eventName.value;
     const price = this.state.web3.utils.toWei(this.eventPrice.value.toString(), 'Ether');
-    this.createEvent(name, price, this.state.startDate.toString(), this.state.endDate.toString());
+    if (name === '') {
+      this.setState({
+        errorName: 'This field is required.'
+      })
+    } else if (price === '') {
+      this.setState({
+        errorPrice: 'This field is required.'
+      })
+    } else
+      this.createEvent(name, price, this.state.startDate.toString(), this.state.endDate.toString());
   }
 
   render() {
-    const {isFreeOrPaid, walletBalance, address} = this.state;
+    const {isFreeOrPaid} = this.state;
 
     return (
       <div className="connectors">
@@ -152,7 +163,7 @@ class Create extends Component {
               letterSpacing: 3,
               width: "285px"
               }}>
-              <span>{ Math.round(this.state.walletBalance * 1000000) / 1000000 + 'ETH' }</span>
+              <span>{ Math.round(this.state.walletBalance * 100000) / 100000 + 'ETH' }</span>
               <span style={{ 
                 marginLeft: 10, 
                 padding: "5px 8px", 
@@ -160,7 +171,7 @@ class Create extends Component {
                 backgroundColor: "#f7f8fa"
               }}>
                 <span>{ shortenText(this.state.address) }</span>
-                <img style={{ width: 12, marginLeft: 10 }} src={ethereum} />
+                <img style={{ width: 12, marginLeft: 10 }} src={ethereum} alt='ethereum' />
               </span>
             </div>
           </div>
@@ -189,14 +200,14 @@ class Create extends Component {
             </Form.Group>
             { isFreeOrPaid ? 
               (<div className="row">
-                <a className="mb-3 event-input btn-paid"
+                <span className="mb-3 event-input btn-paid"
                   onClick={this.setFree}
                   style={{ marginRight: 40 }}
                 >
                   <span className='btn-word-left'>FREE</span>
                   <span className='btn-word-right'>PAID</span>
-                </a>
-                <a className="mb-3 event-input btn-paid"
+                </span>
+                <span className="mb-3 event-input btn-paid"
                   style={{ marginLeft: 40, backgroundColor: 'grey' }}
                   onClick={this.setPaid}
                 >
@@ -206,18 +217,18 @@ class Create extends Component {
                   <span className='btn-word-right'
                     style={{ color: "#000000" }}
                   >PAID</span>
-                </a>
+                </span>
               </div>)
               :
               (<div className="row">
-                <a className="mb-3 event-input btn-paid"
+                <span className="mb-3 event-input btn-paid"
                   onClick={this.setFree}
                   style={{ marginRight: 40, backgroundColor: 'grey' }}
                 >
                   <span className='btn-word-left'>FREE</span>
                   <span className='btn-word-right'>PAID</span>
-                </a>
-                <a className="mb-3 event-input btn-paid"
+                </span>
+                <span className="mb-3 event-input btn-paid"
                   style={{ marginLeft: 40 }}
                   onClick={this.setPaid}
                 >
@@ -227,7 +238,7 @@ class Create extends Component {
                   <span className='btn-word-right'
                     style={{ color: "#000000" }}
                   >PAID</span>
-                </a>
+                </span>
               </div>)
             }
             { isFreeOrPaid && 

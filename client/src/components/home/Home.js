@@ -1,31 +1,28 @@
 import React from 'react';
-import { useWeb3React } from "@web3-react/core"
-import { injected } from "../wallet/connectors"
 import { Container } from "react-bootstrap";
 import {
-  BrowserRouter as Router,
   Link,
 } from "react-router-dom";
 
 
 export default function Home() {
-  const { active, account, library, connector, activate, deactivate } = useWeb3React()
+  // const { active, account, library, connector, activate, deactivate } = useWeb3React()
 
-  async function connect() {
-    try {
-      await activate(injected)
-    } catch (ex) {
-      console.log(ex)
-    }
-  }
+  // async function connect() {
+  //   try {
+  //     await activate(injected)
+  //   } catch (ex) {
+  //     console.log(ex)
+  //   }
+  // }
 
-  async function disconnect() {
-    try {
-      deactivate()
-    } catch (ex) {
-      console.log(ex)
-    }
-  }
+  // async function disconnect() {
+  //   try {
+  //     deactivate()
+  //   } catch (ex) {
+  //     console.log(ex)
+  //   }
+  // }
 
   return (
     <div className="home">

@@ -11,10 +11,6 @@ import Home from './components/home/Home';
 import Events from './components/events/Events';
 import Connectors from "./components/connectors/Connectors";
 import Create from './components/events/Create';
-
-import ImbuEventsContract from "./contracts/ImbuEvents.json";
-import getWeb3 from "./getWeb3";
-
 import "./App.css";
 
 function getLibrary(provider) {
