@@ -60,16 +60,25 @@ contract ImbuEvents {
     require(msg.value >= _event.price);
     // Require that the buyer is not the event owner
     require(_owner != msg.sender);
-    // Add address to subscribers
-    _event.subscriberCounts++;
-    _event.subscribers.push(msg.sender);
-    // Update the event
-    events[_id] = _event;
-    // Pay the owner by sending them Ether
-    address(_owner).transfer(msg.value);
-    
-    
-    emit EventPurchased(_id, _event.name, _event.price, msg.sender);
+    // Check if user purchased
+    bool isPurchased = false;
+    for (uint j = 0; j < _event.subscribers.length; j++) {
+      if(_event.subscribers[j] == msg.sender) {
+        isPurchased = true;
+      }
+    }
+
+    if (!isPurchased) {
+      // Add address to subscribers
+      _event.subscriberCounts++;
+      _event.subscribers.push(msg.sender);
+      // Update the event
+      events[_id] = _event;
+      // Pay the owner by sending them Ether
+      address(_owner).transfer(msg.value);
+      
+      emit EventPurchased(_id, _event.name, _event.price, msg.sender);
+    }
   }
 
   function startEvent(uint _id) public {
