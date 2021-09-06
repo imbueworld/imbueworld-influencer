@@ -12,18 +12,7 @@ class Events extends Component {
     super(props);
 
     this.state = {
-      events: [
-      {
-        id: 1,
-        name: 'adsfadsfasdfadsfasdfasdf',
-        date: '',
-      },
-      {
-        id: 2,
-        name: 'asdfadsfadsfasdfadsfasdfasdf',
-        date: '',
-      }
-    ],
+      events: [],
     }
 
     this.loadBlockchainData = this.loadBlockchainData.bind(this);

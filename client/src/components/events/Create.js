@@ -36,6 +36,7 @@ class Create extends Component {
 
     this.createEvent = this.createEvent.bind(this);
     this.submitForm = this.submitForm.bind(this);
+    this.changeDateRange = this.changeDateRange(this);
   }
 
   componentWillMount() {
@@ -107,8 +108,7 @@ class Create extends Component {
     event.preventDefault();
     const name = this.eventName.value;
     const price = this.state.web3.utils.toWei(this.eventPrice.value.toString(), 'Ether');
-    const [startDate, endDate, ...other] = this.state;
-    this.createEvent(name, price, startDate, endDate);
+    this.createEvent(name, price, this.state.startDate.toString(), this.state.endDate.toString());
   }
 
   render() {
