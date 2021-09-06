@@ -32,6 +32,7 @@ class Create extends Component {
     };
 
     this.createEvent = this.createEvent.bind(this);
+    this.submitForm = this.submitForm.bind(this);
   }
 
   componentWillMount() {
@@ -84,12 +85,25 @@ class Create extends Component {
     var endTime = "endTime";
     this.state.contract.methods.createEvent(name, price, startTime, endTime).send({ from: this.state.account })
     .on('confirmation', function(confirmationNumber, receipt){
+      // redirect to events page
+      window.location = '/events';
       console.log(receipt);
     })
     .on('error', function(error, receipt){
       console.log(error);
     })
-  }   
+  }
+
+  changeDateRange() {
+
+  }
+  
+  submitForm(event) {
+    event.preventDefault();
+    const name = this.eventName.value;
+    const price = this.state.web3.utils.toWei(this.eventPrice.value.toString(), 'Ether');
+    this.createEvent(name, price);
+  }
 
   render() {
     const {isFreeOrPaid, walletBalance, address} = this.state;
@@ -160,13 +174,7 @@ class Create extends Component {
           >
             CREATE EVENT
           </div>
-          <Form onSubmit={(event) => {
-            event.preventDefault();
-            const name = this.eventName.value;
-            const price = this.state.web3.utils.toWei(this.eventPrice.value.toString(), 'Ether');
-            this.createEvent(name, price);
-            window.location = '/events';
-          }}>
+          <Form onSubmit={(event) => this.submitForm(event)} >
             <Form.Group className="mb-3 event-input" controlId="formGroupEventName">
               <Form.Control type="text" placeholder="EVENT NAME" ref={(input) => { this.eventName = input }} />
             </Form.Group>
