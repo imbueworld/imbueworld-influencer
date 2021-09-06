@@ -71,6 +71,17 @@ class EventDetail extends Component {
     }
   }
 
+  // subscribe Event using wallet
+  subscribeEvent = (id, price) => {
+    this.state.contract.methods.subscribeEvent(id).send({from: this.state.account, value: price})
+    .on('confirmation', (receipt) => {
+      console.log('event subscribed');
+    })
+    .on('error', function(error, receipt){
+      console.log(error);
+    })
+  }
+
   render() {
     const { isPurchased, walletBalance, address, currentEvent } = this.state;
     //const { eventId, eventName, ownerAddress } = this.props.match.params;
@@ -160,7 +171,8 @@ class EventDetail extends Component {
                   }}
                 >YOU'VE SUCCESSFULLY BOOKED</Link>
                 :
-                <Link className="wallet-button" to="/connectors"
+                <a href="#" onClick={() => this.subscribeEvent(currentEvent.id, currentEvent.price)}
+                  className="wallet-button" 
                   style={{
                     textDecoration: "none",
                     letterSpacing: "1.5px",
@@ -172,7 +184,7 @@ class EventDetail extends Component {
                     borderRadius: "20px",
                     marginTop: '-100px'
                   }}
-                >PURSHASE EVENT</Link>
+                >PURSHASE EVENT</a>
             }
           </div>
           <div
