@@ -4,7 +4,6 @@ import { Container, Row, Col, Image } from "react-bootstrap";
 import ImbueEventsContract from '../../contracts/ImbuEvents.json';
 import getWeb3 from "../../getWeb3";
 import share from "../../images/share.png";
-
 const moment = require('moment');
 
 class Events extends Component {
@@ -16,12 +15,14 @@ class Events extends Component {
       {
         id: 1,
         name: 'adsfadsfasdfadsfasdfasdf',
-        date: '2021-11-24 23:23:23 - 2021-11-24 23:23:23',
+        startDate: '2021-11-24 23:23:23',
+        endDate: '2021-11-24 23:23:23',
       },
       {
         id: 2,
         name: 'asdfadsfadsfasdfadsfasdfasdf',
-        date: '2021-11-24 23:23:23 - 2021-11-24 23:23:23',
+        startDate: '2021-11-24 23:23:23',
+        endDate: '2021-11-24 23:23:23',
       }
     ],
     }
@@ -107,14 +108,14 @@ class Events extends Component {
               ( <div>
                   <div style={{
                     textAlign: "center",
-                    marginTop: 20
+                    marginTop: 30
                   }}>
                     <Link className="wallet-button" to="/event/create"
                       style={{
                         textDecoration: "none",
                         letterSpacing: "1.5px",
                         color: "#919194",
-                        fontSize: 10,
+                        fontSize: 20,
                         backgroundColor: "#242429",
                         padding: "10px 20px 10px 20px",
                         borderRadius: "20px",
@@ -138,8 +139,9 @@ class Events extends Component {
                           </h4>
                         </Col>
                         <Col sm={3} style={{ color: "#FFFFFF", marginTop: 8 }}>
-                          <h5 style={{ textAlign: "center", marginLeft: 10, color: "#919194" }}>
-                            {event.date}
+                          <h5 style={{ textAlign: "center", marginLeft: 10, color: "#919194", fontSize: '1.15rem' }}>
+                            {moment(event.startDate).format('MMM Do YYYY h:mm:ss A')} - 
+                            {moment(event.endDate).format('MMM Do YYYY h:mm:ss A')}
                           </h5>
                         </Col>
                         <Col sm={1} style={{ color: "#FFFFFF", marginTop: 15 }}>
