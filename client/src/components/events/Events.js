@@ -16,12 +16,12 @@ class Events extends Component {
       {
         id: 1,
         name: 'adsfadsfasdfadsfasdfasdf',
-        date: '',
+        date: '2021-11-24 23:23:23 - 2021-11-24 23:23:23',
       },
       {
         id: 2,
         name: 'asdfadsfadsfasdfadsfasdfasdf',
-        date: '',
+        date: '2021-11-24 23:23:23 - 2021-11-24 23:23:23',
       }
     ],
     }
@@ -139,7 +139,7 @@ class Events extends Component {
                         </Col>
                         <Col sm={3} style={{ color: "#FFFFFF", marginTop: 8 }}>
                           <h5 style={{ textAlign: "center", marginLeft: 10, color: "#919194" }}>
-                            JULY 12TH 2021 <br /> 8PM-10PM
+                            {event.date}
                           </h5>
                         </Col>
                         <Col sm={1} style={{ color: "#FFFFFF", marginTop: 15 }}>

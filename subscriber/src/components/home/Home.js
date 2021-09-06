@@ -1,11 +1,13 @@
 import React from 'react';
 import { useWeb3React } from "@web3-react/core"
 import { injected } from "../wallet/connectors"
-import { Container } from "react-bootstrap";
+import { Container, Image, Row, Col } from "react-bootstrap";
 import {
   BrowserRouter as Router,
   Link,
 } from "react-router-dom";
+import './Home.css';
+import avatar from "../../images/back.jpeg";
 
 
 export default function Home() {
@@ -50,23 +52,39 @@ export default function Home() {
         >
           I M B U E
         </div>
+        <Link className="wallet-button" to="/connectors"
+          style={{
+            textDecoration: "none",
+            letterSpacing: "1.5px",
+            color: "#919194",
+            fontSize: 10,
+            backgroundColor: "#242429",
+            padding: "10px 20px 10px 20px",
+            borderRadius: "20px",        
+            float: "right",
+            marginTop: -50,
+          }}
+        >CONNECT WALLET</Link>
         <div
           style={{
-            fontFamily: "LuloCleanW01-One",
-            fontStyle: "normal",
-            fontWeight: "normal",
-            fontSize: 12,
-            lineHeight: "17px",
             alignItems: "center",
             textAlign: "center",
             marginTop: 50,
-            letterSpacing: "5px",
-            color: "#303030",
           }}
         >
-          LIVESTREAM TO YOUR FAVORITE
-          <br />
-          AUDIENCES AND GET PAID IN CRYPTO
+          <Link className="wallet-button" to="/event/purchase"
+            style={{
+              textDecoration: "none",
+              letterSpacing: "1.5px",
+              color: "#919194",
+              fontSize: 15,
+              backgroundColor: "#FFFFFF",
+              padding: "10px 20px 10px 20px",
+              border: "1px solid #000000",
+              borderRadius: "20px",
+              marginTop: '-100px'
+            }}
+          >CONNECT WALLET TO JOIN LIVESTREAM</Link>
         </div>
         <div
           style={{
@@ -79,26 +97,19 @@ export default function Home() {
             textAlign: "center",
             marginTop: 15,
             letterSpacing: "6px",
+            marginTop: '30px'
           }}
-        >
-          CONNECT YOUR
-          <br /> WALLET TO SIGN IN
+          >
+          <Row>
+            <Col md={2}>WORKOUT LIVE</Col>
+            <Col md={8}>WORKOUT WITH ME AND GET ALL THE TIPS OF THE TIPS OF THE TRADE.</Col>
+            <Col md={2}>8 AM - 9 AM JULY 21 2021</Col>
+          </Row>
         </div>
         <div style={{
           textAlign: "center",
           marginTop: 150
         }}>
-          <Link className="wallet-button" to="/connectors"
-            style={{
-              textDecoration: "none",
-              letterSpacing: "1.5px",
-              color: "#919194",
-              fontSize: 10,
-              backgroundColor: "#242429",
-              padding: "10px 20px 10px 20px",
-              borderRadius: "20px",
-            }}
-          >CONNECT WALLET</Link>
         </div>
       </Container>
     </div>

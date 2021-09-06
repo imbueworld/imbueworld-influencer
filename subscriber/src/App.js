@@ -11,6 +11,7 @@ import Home from './components/home/Home';
 import Events from './components/events/Events';
 import Connectors from "./components/connectors/Connectors";
 import Create from './components/events/Create';
+import Purchase from './components/events/Purchase';
 
 import ImbuEventsContract from "./contracts/ImbuEvents.json";
 import getWeb3 from "./getWeb3";
@@ -85,6 +86,9 @@ class App extends Component {
               </Route>
               <Route path="/event/create">
                 <Create />
+              </Route>
+              <Route path="/event/purchase">
+                <Purchase />
               </Route>
               <Route path="/">
                 <Home />
