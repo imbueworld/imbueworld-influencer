@@ -24,17 +24,15 @@ class Events extends Component {
       walletBalance: 0,
       address: '',
       events: [],
+      subscriberList: [],
     }
-
-    this.loadBlockchainData = this.loadBlockchainData.bind(this);
-    this.subscribeEvent = this.subscribeEvent.bind(this);
   }
 
   componentDidMount() {
     this.loadBlockchainData();
   }
 
-  async loadBlockchainData() {
+  loadBlockchainData = async() => {
     const web3 = await getWeb3();
 
     // Use web3 to get the user's accounts.
@@ -62,6 +60,16 @@ class Events extends Component {
       const eventCount = await imbueEvents.methods.eventCount().call();
       console.log(eventCount); 
       this.setState({ eventCount });
+      
+      // Load subscriberList
+      const subscriberListCount = await imbueEvents.methods.subscriberListCount().call();
+      for (var i = 1; i <= subscriberListCount; i++) {
+        const subscriber = await imbueEvents.methods.subscriberList(i).call();
+        this.setState({
+          subscriberList: [...this.state.subscriberList, subscriber]
+        })
+      }
+
       // Load events
       for (var i = 1; i <= eventCount; i++) {
         const event = await imbueEvents.methods.events(i).call();
@@ -75,7 +83,7 @@ class Events extends Component {
   }
 
   // subscribe Event using wallet
-  subscribeEvent(id, price) {
+  subscribeEvent = (id, price) => {
     this.state.contract.methods.subscribeEvent(id).send({from: this.state.account, value: price})
     .on('confirmation', (receipt) => {
       console.log('event subscribed');
@@ -86,16 +94,31 @@ class Events extends Component {
   }
 
   // Redirect eventDetail page
-  redirectToEventDetail(id, name, owner) {
+  redirectToEventDetail = (id, name, owner) => {
     // Redirect to EventDetail Page
     var redirectLink = "/event/" + owner + '/' + id + '/' + name;
     redirectLink = redirectLink.replace(/ /g, '')
     this.props.history.push(redirectLink);
   }
 
-  render() {
-    const {events} = this.state;
+  // Check event if purchased
+  checkEventPurchased = (eventId) => {
     debugger;
+    let isPurchased = false;
+    const { address, subscriberList } = this.state;
+    if(subscriberList.length > 0) {
+      subscriberList.map((subscriber, index) => {
+        if(subscriber.eventId == eventId && subscriber.subscriberAddress.toUpperCase() == address.toUpperCase()) {
+          isPurchased = true;
+        }
+      });
+    }
+
+    return isPurchased;
+  }
+
+  render() {
+    const {events, subscriberList} = this.state;
 
     return (
       <div className="home">
@@ -196,20 +219,37 @@ class Events extends Component {
                         <Col
                          sm={3}
                         >
-                          <a href="#" onClick={() => this.subscribeEvent(event.id, event.price)}
-                            style={{
-                              backgroundColor: "#f9f9f9",
-                              color: "#1f1f1f",
-                              textAlign: "center",
-                              marginTop: 13,
-                              marginRight: 30,
-                              padding: "5px 0px 5px 0px",
-                              borderRadius: 20,
-                              cursor: 'pointer'
-                            }}
-                          >
-                            PURCHASE EVENT
-                          </a>
+                          { this.checkEventPurchased(event.id) ?  
+                            <a href="#" onClick={() => this.subscribeEvent(event.id, event.price)}
+                              style={{
+                                backgroundColor: "#f9f9f9",
+                                color: "#1f1f1f",
+                                textAlign: "center",
+                                marginTop: 13,
+                                marginRight: 30,
+                                padding: "5px 0px 5px 0px",
+                                borderRadius: 20,
+                                cursor: 'pointer'
+                                }}
+                            >
+                              VISIT EVENT
+                            </a>
+                            :
+                            <a href="#" onClick={() => this.subscribeEvent(event.id, event.price)}
+                              style={{
+                                backgroundColor: "#f9f9f9",
+                                color: "#1f1f1f",
+                                textAlign: "center",
+                                marginTop: 13,
+                                marginRight: 30,
+                                padding: "5px 0px 5px 0px",
+                                borderRadius: 20,
+                                cursor: 'pointer'
+                              }}
+                            >
+                              PURCHASE EVENT
+                            </a>
+                          }
                         </Col>
                       </Row>
                     </div>
