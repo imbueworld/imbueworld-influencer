@@ -1,12 +1,14 @@
 import React, {Component} from 'react';
 import { Link } from "react-router-dom";
-import { Container, Row, Col, Image } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import { withRouter } from 'react-router';
 import ImbueEventsContract from '../../contracts/ImbuEvents.json';
 import getWeb3 from "../../getWeb3";
-import share from "../../images/share.png";
-
 import ethereum from '../../images/ethereum.jpg';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faShareSquare } from '@fortawesome/free-solid-svg-icons';
+import './Events.css';
+const moment = require('moment');
 
 function shortenText(text) {
   var ret = text;
@@ -71,7 +73,7 @@ class Events extends Component {
       }
 
       // Load events
-      for (var i = 1; i <= eventCount; i++) {
+      for (var j = 1; j <= eventCount; j++) {
         const event = await imbueEvents.methods.events(i).call();
         this.setState({
           events: [...this.state.events, event]
@@ -109,7 +111,7 @@ class Events extends Component {
     const { address, subscriberList } = this.state;
     if(subscriberList.length > 0) {
       subscriberList.map((subscriber, index) => {
-        if(subscriber.eventId == eventId && subscriber.subscriberAddress.toUpperCase() == address.toUpperCase()) {
+        if(subscriber.eventId === eventId && subscriber.subscriberAddress.toUpperCase() === address.toUpperCase()) {
           isPurchased = true;
         }
       });
@@ -119,7 +121,7 @@ class Events extends Component {
   }
 
   render() {
-    const {events, subscriberList} = this.state;
+    const {events} = this.state;
 
     return (
       <div className="home">
@@ -159,7 +161,7 @@ class Events extends Component {
               letterSpacing: 3,
               width: "285px"
               }}>
-              <span>{ Math.round(this.state.walletBalance * 1000000) / 1000000 + 'ETH' }</span>
+              <span>{ Math.round(this.state.walletBalance * 100000) / 100000 + 'ETH' }</span>
               <span style={{ 
                 marginLeft: 10, 
                 padding: "5px 8px", 
@@ -167,7 +169,7 @@ class Events extends Component {
                 backgroundColor: "#f7f8fa"
               }}>
                 <span>{ shortenText(this.state.address) }</span>
-                <img style={{ width: 12, marginLeft: 10 }} src={ethereum} />
+                <img style={{ width: 12, marginLeft: 10 }} src={ethereum} alt='ethereum' />
               </span>
             </div>
           </div>
@@ -207,49 +209,38 @@ class Events extends Component {
                           </h4>
                         </Col>
                         <Col sm={3} style={{ color: "#FFFFFF", marginTop: 8 }}>
-                          <h5 style={{ textAlign: "center", marginLeft: 10, color: "#919194" }}>
-                            JULY 12TH 2021 <br /> 8PM-10PM
-                          </h5>
+                          {
+                            moment(event.startDate).format('MMM Do YYYY') === moment(event.startDate).format('MMM Do YYYY') ?
+                              <h5 style={{ textAlign: "center", marginLeft: 10, color: "#919194", fontSize: '1.15rem' }}>
+                                {moment(event.startDate).format('MMM Do YYYY')} <br /> 
+                                {moment(event.startDate).format('h A')} - {moment(event.endDate).format('h A')}
+                              </h5>
+                              :
+                              <h5 style={{ textAlign: "center", marginLeft: 10, color: "#919194", fontSize: '1.15rem' }}>
+                                {moment(event.startDate).format('MMM Do YYYY h A')} - <br /> 
+                                {moment(event.endDate).format('MMM Do YYYY h A')}
+                              </h5>
+                          }
                         </Col>
                         <Col sm={1} style={{ color: "#FFFFFF", marginTop: 15 }}>
-                          <Image
-                            src={share}
-                            style={{ width: 30, height: 30 }}
-                          />
+                          <FontAwesomeIcon className='icon-share' icon={faShareSquare} size="lg" />
                         </Col>
                         <Col
                          sm={3}
                         >
-                          { this.checkEventPurchased(event.id) ?  
-                            <a href="#" onClick={() => this.redirectToEventDetail(event.id, event.name, event.owner)}
-                              style={{
-                                backgroundColor: "#f9f9f9",
-                                color: "#1f1f1f",
-                                textAlign: "center",
-                                marginTop: 13,
-                                marginRight: 30,
-                                padding: "5px 0px 5px 0px",
-                                borderRadius: 20,
-                                cursor: 'pointer'
-                                }}
+                          {
+                            this.checkEventPurchased(event.id) ?
+                            <h5 onClick={() => this.redirectToEventDetail(event.id, event.name, event.owner)}
+                              className="start-event"
                             >
                               VISIT EVENT
-                            </a>
+                            </h5>
                             :
-                            <a href="#" onClick={(e) => this.subscribeEvent(e, event.id, event.price)}
-                              style={{
-                                backgroundColor: "#f9f9f9",
-                                color: "#1f1f1f",
-                                textAlign: "center",
-                                marginTop: 13,
-                                marginRight: 30,
-                                padding: "5px 0px 5px 0px",
-                                borderRadius: 20,
-                                cursor: 'pointer'
-                              }}
+                            <h5 onClick={(e) => this.subscribeEvent(e, event.id, event.price)}
+                              className="start-event"  
                             >
                               PURCHASE EVENT
-                            </a>
+                            </h5>
                           }
                         </Col>
                       </Row>

@@ -1,33 +1,29 @@
 import React from 'react';
-import { useWeb3React } from "@web3-react/core"
-import { injected } from "../wallet/connectors"
-import { Container, Image, Row, Col } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import {
-  BrowserRouter as Router,
   Link,
 } from "react-router-dom";
 import './Home.css';
-import avatar from "../../images/back.jpeg";
 
 
 export default function Home() {
-  const { active, account, library, connector, activate, deactivate } = useWeb3React()
+  // const { active, account, library, connector, activate, deactivate } = useWeb3React()
 
-  async function connect() {
-    try {
-      await activate(injected)
-    } catch (ex) {
-      console.log(ex)
-    }
-  }
+  // async function connect() {
+  //   try {
+  //     await activate(injected)
+  //   } catch (ex) {
+  //     console.log(ex)
+  //   }
+  // }
 
-  async function disconnect() {
-    try {
-      deactivate()
-    } catch (ex) {
-      console.log(ex)
-    }
-  }
+  // async function disconnect() {
+  //   try {
+  //     deactivate()
+  //   } catch (ex) {
+  //     console.log(ex)
+  //   }
+  // }
 
   return (
     <div className="home">
@@ -95,9 +91,8 @@ export default function Home() {
             lineHeight: "31px",
             alignItems: "center",
             textAlign: "center",
-            marginTop: 15,
             letterSpacing: "6px",
-            marginTop: '30px'
+            marginTop: 30
           }}
           >
           <Row>

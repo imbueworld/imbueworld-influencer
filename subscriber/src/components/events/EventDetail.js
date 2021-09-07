@@ -1,15 +1,11 @@
 import React, {Component} from 'react';
-import { Container, Image, Row, Col } from "react-bootstrap";
-import {
-  BrowserRouter as Router,
-  Link,
-} from "react-router-dom";
+import { Container, Row, Col } from "react-bootstrap";
 import { withRouter } from 'react-router';
 import ImbueEventsContract from '../../contracts/ImbuEvents.json';
 import getWeb3 from "../../getWeb3";
 import './EventDetail.css';
-import avatar from "../../images/back.jpeg";
-import ethereum from "../../images/ethereum.jpg"
+import ethereum from "../../images/ethereum.jpg";
+const moment = require('moment');
 
 function shortenText(text) {
   var ret = text;
@@ -62,7 +58,7 @@ class EventDetail extends Component {
       const imbueEvents = new web3.eth.Contract(ImbueEventsContract.abi, networkData.address);
       this.setState({ web3, accounts, contract: imbueEvents });
 
-      const eventCount = await imbueEvents.methods.eventCount().call();
+      // const eventCount = await imbueEvents.methods.eventCount().call();
 
       // Load subscriberList
       const subscriberListCount = await imbueEvents.methods.subscriberListCount().call();
@@ -98,7 +94,7 @@ class EventDetail extends Component {
     const { address, subscriberList } = this.state;
     if(subscriberList.length > 0) {
       subscriberList.map((subscriber, index) => {
-        if(subscriber.eventId == eventId && subscriber.subscriberAddress.toUpperCase() == address.toUpperCase()) {
+        if(subscriber.eventId === eventId && subscriber.subscriberAddress.toUpperCase() === address.toUpperCase()) {
           isPurchased = true;
         }
       });
@@ -170,7 +166,7 @@ class EventDetail extends Component {
                 backgroundColor: "#f7f8fa"
               }}>
                 <span>{ shortenText(address) }</span>
-                <img style={{ width: 12, marginLeft: 10 }} src={ethereum} />
+                <img style={{ width: 12, marginLeft: 10 }} src={ethereum} alt="ethereum" />
               </span>
             </div>
             </div>
@@ -232,7 +228,20 @@ class EventDetail extends Component {
             <Row>
               <Col md={2}>{currentEvent && currentEvent.name}</Col>
               <Col md={8}>{currentEvent && currentEvent.description}</Col>
-              <Col md={2}>{currentEvent && currentEvent.startTime}{currentEvent && currentEvent.endTime}</Col>
+              <Col md={2}>{currentEvent && 
+                (
+                  moment(currentEvent.startDate).format('MMM Do YYYY') === moment(currentEvent.startDate).format('MMM Do YYYY') ?
+                    <h5 style={{ textAlign: "center", marginLeft: 10, color: "#919194", fontSize: '1.15rem' }}>
+                      {moment(currentEvent.startDate).format('MMM Do YYYY')} <br /> 
+                      {moment(currentEvent.startDate).format('h A')} - {moment(currentEvent.endDate).format('h A')}
+                    </h5>
+                    :
+                    <h5 style={{ textAlign: "center", marginLeft: 10, color: "#919194", fontSize: '1.15rem' }}>
+                      {moment(currentEvent.startDate).format('MMM Do YYYY h A')} - <br /> 
+                      {moment(currentEvent.endDate).format('MMM Do YYYY h A')}
+                    </h5>
+                )
+              }</Col>
             </Row>
           </div>
           <div style={{

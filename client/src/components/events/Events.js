@@ -66,6 +66,7 @@ class Events extends Component {
 
   render() {
     const {events} = this.state;
+    
     return (
       <div className="home">
         <Container
@@ -131,10 +132,18 @@ class Events extends Component {
                           </h4>
                         </Col>
                         <Col sm={3} style={{ color: "#FFFFFF", marginTop: 8 }}>
-                          <h5 style={{ textAlign: "center", marginLeft: 10, color: "#919194", fontSize: '1.15rem' }}>
-                            {moment(event.startDate).format('MMM Do YYYY h:mm:ss A')} - 
-                            {moment(event.endDate).format('MMM Do YYYY h:mm:ss A')}
-                          </h5>
+                          {
+                            moment(event.startDate).format('MMM Do YYYY') === moment(event.startDate).format('MMM Do YYYY') ?
+                              <h5 style={{ textAlign: "center", marginLeft: 10, color: "#919194", fontSize: '1.15rem' }}>
+                                {moment(event.startDate).format('MMM Do YYYY')} <br /> 
+                                {moment(event.startDate).format('h A')} - {moment(event.endDate).format('h A')}
+                              </h5>
+                              :
+                              <h5 style={{ textAlign: "center", marginLeft: 10, color: "#919194", fontSize: '1.15rem' }}>
+                                {moment(event.startDate).format('MMM Do YYYY h A')} - <br /> 
+                                {moment(event.endDate).format('MMM Do YYYY h A')}
+                              </h5>
+                          }
                         </Col>
                         <Col sm={1} style={{ color: "#FFFFFF", marginTop: 15 }}>
                           <FontAwesomeIcon className='icon-share' icon={faShareSquare} size="lg" />
