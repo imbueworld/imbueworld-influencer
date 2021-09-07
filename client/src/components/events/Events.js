@@ -49,6 +49,19 @@ class Events extends Component {
     }
   }
 
+  startEvent = (id) => {
+    this.state.contract.methods.startEvent(id).send({from: this.state.account})
+    .on('receipt', () => {
+      console.log('receipt');
+    })
+    .on('confirmation', (receipt) => {
+      console.log('event subscribed');
+    })
+    .on('error', function(error, receipt){
+      console.log(error);
+    })
+  }
+
   render() {
     const {events} = this.state;
     return (
@@ -140,20 +153,22 @@ class Events extends Component {
                         <Col
                          sm={3}
                         >
-                          <h5
-                            style={{
-                              backgroundColor: "#f9f9f9",
-                              color: "#1f1f1f",
-                              textAlign: "center",
-                              marginTop: 13,
-                              marginRight: 30,
-                              padding: "5px 0px 5px 0px",
-                              borderRadius: 20,
-                              cursor: 'pointer'
-                            }}
-                          >
-                            START EVENT
-                          </h5>
+                          { !event.isStarted &&
+                            <a href="#" onClick = {() => this.startEvent(event.id)}
+                              style={{
+                                backgroundColor: "#f9f9f9",
+                                color: "#1f1f1f",
+                                textAlign: "center",
+                                marginTop: 13,
+                                marginRight: 30,
+                                padding: "5px 0px 5px 0px",
+                                borderRadius: 20,
+                                cursor: 'pointer'
+                              }}
+                            >
+                              START EVENT
+                            </a>
+                          }
                         </Col>
                       </Row>
                     </div>
