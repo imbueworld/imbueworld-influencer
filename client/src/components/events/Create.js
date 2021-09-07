@@ -34,7 +34,8 @@ class Create extends Component {
       startDate: new Date(),
       endDate: new Date(),
       errorName: '',
-      errorPrice: ''
+      errorPrice: '',
+      errorDescription: ''
     };
 
   }
@@ -113,10 +114,19 @@ class Create extends Component {
       this.setState({
         errorName: 'This field is required.'
       });
-    } else if (this.eventPrice && this.eventPrice.value !== '') {
+    } else if (this.eventDescrption.value === '') {
+      this.setState({
+        errorDescription: 'This field is required.'
+      });
+    } else if (!this.state.isFreeOrPaid || (this.eventPrice && this.eventPrice.value !== '')) {
       const name = this.eventName.value;
-      const price = this.state.web3.utils.toWei(this.eventPrice.value.toString(), 'Ether');
-      this.createEvent(name, price, this.state.startDate.toString(), this.state.endDate.toString());
+      if (this.state.isFreeOrPaid) {
+        const price = this.state.web3.utils.toWei(this.eventPrice.value.toString(), 'Ether');
+        this.createEvent(name, price, this.state.startDate.toString(), this.state.endDate.toString());
+      } else {
+        const price = this.state.web3.utils.toWei('0', 'Ether');
+        this.createEvent(name, price, this.state.startDate.toString(), this.state.endDate.toString());
+      }
     } else {
       this.setState({
         errorName: '',
@@ -126,7 +136,7 @@ class Create extends Component {
   }
 
   render() {
-    const {isFreeOrPaid, errorName, errorPrice} = this.state;
+    const {isFreeOrPaid, errorName, errorPrice, errorDescription} = this.state;
 
     return (
       <div className="connectors">
@@ -198,6 +208,10 @@ class Create extends Component {
             <Form.Group className="mb-3 event-input" controlId="formGroupEventName">
               <Form.Control type="text" placeholder="EVENT NAME" ref={(input) => { this.eventName = input }} />
               { errorName !== '' && <span className='error-message'>This field is required.</span>}
+            </Form.Group>
+            <Form.Group className="mb-3 event-input" controlId="formGroupEventDescription">
+              <Form.Control type="text" placeholder="DESCRIPTION" ref={(input) => { this.eventDescrption = input }} />
+              { errorDescription !== '' && <span className='error-message'>This field is required.</span>}
             </Form.Group>
             <Form.Group className="mb-3 event-input" controlId="formGroupDateTime">
               <DatetimeRangePicker onChange={(event) => this.changeDateRange(event)} />

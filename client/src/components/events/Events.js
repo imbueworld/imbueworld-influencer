@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
 import { Link } from "react-router-dom";
-import { Container, Row, Col, Image } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import ImbueEventsContract from '../../contracts/ImbuEvents.json';
 import getWeb3 from "../../getWeb3";
-import share from "../../images/share.png";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faShareSquare } from '@fortawesome/free-solid-svg-icons';
+import './Events.css';
 const moment = require('moment');
 
 class Events extends Component {
@@ -97,17 +99,7 @@ class Events extends Component {
                     textAlign: "center",
                     marginTop: 30
                   }}>
-                    <Link className="wallet-button" to="/event/create"
-                      style={{
-                        textDecoration: "none",
-                        letterSpacing: "1.5px",
-                        color: "#919194",
-                        fontSize: 20,
-                        backgroundColor: "#242429",
-                        padding: "10px 20px 10px 20px",
-                        borderRadius: "20px",
-                      }}
-                    >CREATE EVENTS</Link>
+                    <Link className="wallet-button" to="/event/create">CREATE EVENTS</Link>
                   </div>
                   {events.map((event, index) => (
                     <div
@@ -132,26 +124,12 @@ class Events extends Component {
                           </h5>
                         </Col>
                         <Col sm={1} style={{ color: "#FFFFFF", marginTop: 15 }}>
-                          <Image
-                            src={share}
-                            style={{ width: 30, height: 30 }}
-                          />
+                          <FontAwesomeIcon className='icon-share' icon={faShareSquare} size="lg" />
                         </Col>
                         <Col
                          sm={3}
                         >
-                          <h5
-                            style={{
-                              backgroundColor: "#f9f9f9",
-                              color: "#1f1f1f",
-                              textAlign: "center",
-                              marginTop: 13,
-                              marginRight: 30,
-                              padding: "5px 0px 5px 0px",
-                              borderRadius: 20,
-                              cursor: 'pointer'
-                            }}
-                          >
+                          <h5 className="start-event">
                             START EVENT
                           </h5>
                         </Col>
