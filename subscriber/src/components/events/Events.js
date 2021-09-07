@@ -83,7 +83,9 @@ class Events extends Component {
   }
 
   // subscribe Event using wallet
-  subscribeEvent = (id, price) => {
+  subscribeEvent = (e, id, price) => {
+    e.preventDefault();
+    e.stopPropagation();
     this.state.contract.methods.subscribeEvent(id).send({from: this.state.account, value: price})
     .on('confirmation', (receipt) => {
       console.log('event subscribed');
@@ -103,7 +105,6 @@ class Events extends Component {
 
   // Check event if purchased
   checkEventPurchased = (eventId) => {
-    debugger;
     let isPurchased = false;
     const { address, subscriberList } = this.state;
     if(subscriberList.length > 0) {
@@ -220,7 +221,7 @@ class Events extends Component {
                          sm={3}
                         >
                           { this.checkEventPurchased(event.id) ?  
-                            <a href="#" onClick={() => this.subscribeEvent(event.id, event.price)}
+                            <a href="#" onClick={() => this.redirectToEventDetail(event.id, event.name, event.owner)}
                               style={{
                                 backgroundColor: "#f9f9f9",
                                 color: "#1f1f1f",
@@ -235,7 +236,7 @@ class Events extends Component {
                               VISIT EVENT
                             </a>
                             :
-                            <a href="#" onClick={() => this.subscribeEvent(event.id, event.price)}
+                            <a href="#" onClick={(e) => this.subscribeEvent(e, event.id, event.price)}
                               style={{
                                 backgroundColor: "#f9f9f9",
                                 color: "#1f1f1f",
