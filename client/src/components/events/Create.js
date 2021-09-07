@@ -85,8 +85,8 @@ class Create extends Component {
     }
   }
 
-  createEvent = (name, price, startDate, endDate) => {
-    this.state.contract.methods.createEvent(name, price, startDate, endDate).send({ from: this.state.account })
+  createEvent = (name, description, price, startDate, endDate) => {
+    this.state.contract.methods.createEvent(name, description, price, startDate, endDate).send({ from: this.state.account })
     .on('receipt', () => {
       // redirect to events page
       var redirectLink = '/events';
@@ -120,12 +120,14 @@ class Create extends Component {
       });
     } else if (!this.state.isFreeOrPaid || (this.eventPrice && this.eventPrice.value !== '')) {
       const name = this.eventName.value;
+      const description = this.eventDescrption.value;
+
       if (this.state.isFreeOrPaid) {
         const price = this.state.web3.utils.toWei(this.eventPrice.value.toString(), 'Ether');
-        this.createEvent(name, price, this.state.startDate.toString(), this.state.endDate.toString());
+        this.createEvent(name, description, price, this.state.startDate.toString(), this.state.endDate.toString());
       } else {
         const price = this.state.web3.utils.toWei('0', 'Ether');
-        this.createEvent(name, price, this.state.startDate.toString(), this.state.endDate.toString());
+        this.createEvent(name, description, price, this.state.startDate.toString(), this.state.endDate.toString());
       }
     } else {
       this.setState({

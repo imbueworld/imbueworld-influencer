@@ -51,6 +51,19 @@ class Events extends Component {
     }
   }
 
+  startEvent = (id) => {
+    this.state.contract.methods.startEvent(id).send({from: this.state.account})
+    .on('receipt', () => {
+      console.log('receipt');
+    })
+    .on('confirmation', (receipt) => {
+      console.log('event subscribed');
+    })
+    .on('error', function(error, receipt){
+      console.log(error);
+    })
+  }
+
   render() {
     const {events} = this.state;
     return (

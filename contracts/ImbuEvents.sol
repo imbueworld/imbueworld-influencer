@@ -8,6 +8,7 @@ contract ImbuEvents {
   struct Event {
     uint id;
     string name;
+    string description;
     uint price;
     address payable owner;
     string startTime;
@@ -43,13 +44,14 @@ contract ImbuEvents {
     address payable owner
   );
 
-  function createEvent(string memory _name, uint _price, string memory _startTime, string memory _endTime) public {
+  function createEvent(string memory _name, string memory _description, uint _price, string memory _startTime, string memory _endTime) public {
     require(bytes(_name).length > 0);
+    require(bytes(_description).length > 0);
     require(_price >= 0);
     require(bytes(_startTime).length > 0);
     require(bytes(_endTime).length > 0);
     eventCount ++;
-    events[eventCount] = Event(eventCount, _name, _price, msg.sender,  _startTime, _endTime, false);
+    events[eventCount] = Event(eventCount, _name, _description, _price, msg.sender,  _startTime, _endTime, false);
 
     emit EventCreated(eventCount, _name, _price, _startTime, _endTime, msg.sender);
   }
