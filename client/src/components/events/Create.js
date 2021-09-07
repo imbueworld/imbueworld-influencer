@@ -34,7 +34,8 @@ class Create extends Component {
       startDate: new Date(),
       endDate: new Date(),
       errorName: '',
-      errorPrice: ''
+      errorPrice: '',
+      errorDescription: ''
     };
 
   }
@@ -126,7 +127,7 @@ class Create extends Component {
   }
 
   render() {
-    const {isFreeOrPaid, errorName, errorPrice} = this.state;
+    const {isFreeOrPaid, errorName, errorPrice, errorDescription} = this.state;
 
     return (
       <div className="connectors">
@@ -201,6 +202,10 @@ class Create extends Component {
             </Form.Group>
             <Form.Group className="mb-3 event-input" controlId="formGroupDateTime">
               <DatetimeRangePicker onChange={(event) => this.changeDateRange(event)} />
+            </Form.Group>
+            <Form.Group className="mb-3 event-input" controlId="formGroupEventDescription">
+              <Form.Control type="text" placeholder="DESCRIPTION" ref={(input) => { this.eventDescrption = input }} />
+              { errorDescription !== '' && <span className='error-message'>This field is required.</span>}
             </Form.Group>
             { isFreeOrPaid ? 
               (<div className="row">
