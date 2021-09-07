@@ -26,9 +26,9 @@ class EventDetail extends Component {
     this.state = {
       walletBalance: 0,
       address: '',
-      isPurchased: false,
       eventId: '',
       currentEvent: [],
+      subscriberList: [],
     }
   }
 
@@ -63,9 +63,19 @@ class EventDetail extends Component {
       this.setState({ web3, accounts, contract: imbueEvents });
 
       const eventCount = await imbueEvents.methods.eventCount().call();
-      // Load current with eventId
+
+      // Load subscriberList
+      const subscriberListCount = await imbueEvents.methods.subscriberListCount().call();
+      for (var i = 1; i <= subscriberListCount; i++) {
+        const subscriber = await imbueEvents.methods.subscriberList(i).call();
+        this.setState({
+          subscriberList: [...this.state.subscriberList, subscriber]
+        })
+      }
+
+      // Load selected event with eventId
       const event = await imbueEvents.methods.events(eventId).call();
-        this.setState({ currentEvent: event });
+      this.setState({ currentEvent: event });
     } else {
       window.alert('ImbueEvents contract not deployed to detected network.')
     }
@@ -82,9 +92,25 @@ class EventDetail extends Component {
     })
   }
 
+  // Check event if purchased
+  checkEventPurchased = (eventId) => {
+    let isPurchased = false;
+    const { address, subscriberList } = this.state;
+    if(subscriberList.length > 0) {
+      subscriberList.map((subscriber, index) => {
+        if(subscriber.eventId == eventId && subscriber.subscriberAddress.toUpperCase() == address.toUpperCase()) {
+          isPurchased = true;
+        }
+      });
+    }
+
+    return isPurchased;
+  }
+
+
   render() {
-    const { isPurchased, walletBalance, address, currentEvent } = this.state;
-    //const { eventId, eventName, ownerAddress } = this.props.match.params;
+    const { walletBalance, address, currentEvent } = this.state;
+    const { eventId } = this.props.match.params;
 
     return (
       <div className="home">
@@ -111,7 +137,7 @@ class EventDetail extends Component {
           </div>
           <div className="wallet-status">
             {
-              isPurchased && 
+              this.checkEventPurchased(eventId) && 
               <div 
                 style={{
                   fontSize: 10,
@@ -156,7 +182,7 @@ class EventDetail extends Component {
             }}
           >
             {
-              isPurchased ?
+              this.checkEventPurchased(eventId) ?
                 <Link className="wallet-button" to="/connectors"
                   style={{
                     textDecoration: "none",

@@ -86,15 +86,15 @@ class Create extends Component {
 
   createEvent = (name, price, startDate, endDate) => {
     this.state.contract.methods.createEvent(name, price, startDate, endDate).send({ from: this.state.account })
-    .on('receipt', function(){
+    .on('receipt', () => {
       // redirect to events page
       var redirectLink = '/events';
       this.props.history.push(redirectLink);
     })
-    .on('confirmation', function(confirmationNumber, receipt){
+    .on('confirmation', (confirmationNumber, receipt) => {
       console.log('confirmation');
     })
-    .on('error', function(error, receipt){
+    .on('error', (error, receipt) => {
       console.log("error");
     })
   }
