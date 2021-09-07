@@ -81,8 +81,6 @@ contract ImbuEvents {
     if (isPurchased == false) {
       subscriberListCount++;
       subscriberList[subscriberListCount] = Subscriber(_id, msg.sender);
-      // Update the event
-      events[_id] = _event;
       // Pay the owner by sending them Ether
       address(_owner).transfer(msg.value);
       

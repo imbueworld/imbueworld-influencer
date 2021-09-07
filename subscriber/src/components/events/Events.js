@@ -73,7 +73,7 @@ class Events extends Component {
       }
 
       // Load events
-      for (var j = 1; j <= eventCount; j++) {
+      for (var i = 1; i <= eventCount; i++) {
         const event = await imbueEvents.methods.events(i).call();
         this.setState({
           events: [...this.state.events, event]
@@ -122,6 +122,7 @@ class Events extends Component {
 
   render() {
     const {events} = this.state;
+    console.log(events);
 
     return (
       <div className="home">
@@ -210,15 +211,15 @@ class Events extends Component {
                         </Col>
                         <Col sm={3} style={{ color: "#FFFFFF", marginTop: 8 }}>
                           {
-                            moment(event.startDate).format('MMM Do YYYY') === moment(event.startDate).format('MMM Do YYYY') ?
+                            moment(event.startTime).format('MMM Do YYYY') === moment(event.endTime).format('MMM Do YYYY') ?
                               <h5 style={{ textAlign: "center", marginLeft: 10, color: "#919194", fontSize: '1.15rem' }}>
-                                {moment(event.startDate).format('MMM Do YYYY')} <br /> 
-                                {moment(event.startDate).format('h A')} - {moment(event.endDate).format('h A')}
+                                {moment(event.startTime).format('MMM Do YYYY')} <br /> 
+                                {moment(event.startTime).format('h A')} - {moment(event.endTime).format('h A')}
                               </h5>
                               :
                               <h5 style={{ textAlign: "center", marginLeft: 10, color: "#919194", fontSize: '1.15rem' }}>
-                                {moment(event.startDate).format('MMM Do YYYY h A')} - <br /> 
-                                {moment(event.endDate).format('MMM Do YYYY h A')}
+                                {moment(event.startTime).format('MMM Do YYYY h A')} - <br /> 
+                                {moment(event.endTime).format('MMM Do YYYY h A')}
                               </h5>
                           }
                         </Col>
