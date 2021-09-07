@@ -10,9 +10,9 @@ import Web3 from 'web3'
 import Home from './components/home/Home';
 import Events from './components/events/Events';
 import Connectors from "./components/connectors/Connectors";
-import Create from './components/events/Create';
 import EventDetail from './components/events/EventDetail';
 
+import './bootstrap/dist/css/bootstrap.min.css';
 import "./App.css";
 
 function getLibrary(provider) {
@@ -35,9 +35,6 @@ class App extends Component {
               </Route>
               <Route path="/connectors">
                 <Connectors />
-              </Route>
-              <Route path="/event/create">
-                <Create />
               </Route>
               <Route path="/event/:ownerAddress/:eventId/:eventName">
                 <EventDetail />

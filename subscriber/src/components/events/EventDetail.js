@@ -229,7 +229,7 @@ class EventDetail extends Component {
             >
             <Row>
               <Col md={2}>{currentEvent && currentEvent.name}</Col>
-              <Col md={8}>WORKOUT WITH ME AND GET ALL THE TIPS OF THE TIPS OF THE TRADE.</Col>
+              <Col md={8}>{currentEvent && currentEvent.description}</Col>
               <Col md={2}>{currentEvent && currentEvent.startTime}{currentEvent && currentEvent.endTime}</Col>
             </Row>
           </div>
