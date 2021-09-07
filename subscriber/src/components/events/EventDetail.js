@@ -162,7 +162,7 @@ class EventDetail extends Component {
               letterSpacing: 3,
               width: "285px"
               }}>
-              <span>{ Math.round(walletBalance * 1000000) / 1000000 + 'ETH' }</span>
+              <span>{ Math.round(walletBalance * 100000) / 100000 + 'ETH' }</span>
               <span style={{ 
                 marginLeft: 10, 
                 padding: "5px 8px", 
@@ -183,8 +183,10 @@ class EventDetail extends Component {
           >
             {
               this.checkEventPurchased(eventId) ?
-                <Link className="wallet-button" to="/connectors"
+                <div className="wallet-button" to="/connectors"
                   style={{
+                    display: "inline-block",
+                    cursor: "pointer",
                     textDecoration: "none",
                     letterSpacing: "1.5px",
                     color: "#919194",
@@ -195,7 +197,7 @@ class EventDetail extends Component {
                     borderRadius: "20px",
                     marginTop: '-100px'
                   }}
-                >YOU'VE SUCCESSFULLY BOOKED</Link>
+                >YOU'VE SUCCESSFULLY BOOKED</div>
                 :
                 <a href="#" onClick={() => this.subscribeEvent(currentEvent.id, currentEvent.price)}
                   className="wallet-button" 
