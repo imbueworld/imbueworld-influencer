@@ -95,6 +95,8 @@ class Events extends Component {
 
   render() {
     const {events} = this.state;
+    debugger;
+
     return (
       <div className="home">
         <Container
@@ -206,7 +208,7 @@ class Events extends Component {
                               cursor: 'pointer'
                             }}
                           >
-                            SUBSCRIBE EVENT
+                            PURCHASE EVENT
                           </a>
                         </Col>
                       </Row>

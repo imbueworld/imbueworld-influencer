@@ -1,18 +1,23 @@
 pragma solidity 0.5.16;
 contract ImbuEvents {
   uint public eventCount = 0;
+  uint public subscriberListCount = 0;
   mapping(uint => Event) public events;
+  mapping(uint => Subscriber) public subscriberList;
 
   struct Event {
     uint id;
     string name;
     uint price;
     address payable owner;
-    address payable[] subscribers;
-    uint subscriberCounts;
     string startTime;
     string endTime;
     bool isStarted;
+  }
+  
+  struct Subscriber {
+    uint eventId;
+    address payable subscriberAddress;
   }
 
   event EventCreated(
@@ -44,7 +49,7 @@ contract ImbuEvents {
     require(bytes(_startTime).length > 0);
     require(bytes(_endTime).length > 0);
     eventCount ++;
-    events[eventCount] = Event(eventCount, _name, _price, msg.sender, new address payable[](0), 0, _startTime, _endTime, false);
+    events[eventCount] = Event(eventCount, _name, _price, msg.sender,  _startTime, _endTime, false);
 
     emit EventCreated(eventCount, _name, _price, _startTime, _endTime, msg.sender);
   }
@@ -62,16 +67,16 @@ contract ImbuEvents {
     require(_owner != msg.sender);
     // Check if user purchased
     bool isPurchased = false;
-    for (uint j = 0; j < _event.subscribers.length; j++) {
-      if(_event.subscribers[j] == msg.sender) {
+    for (uint j = 0; j < subscriberListCount; j++) {
+      if(subscriberList[j].eventId == _id && subscriberList[j].subscriberAddress == msg.sender) {
         isPurchased = true;
+        break;
       }
     }
 
     if (isPurchased == false) {
-      // Add address to subscribers
-      _event.subscriberCounts++;
-      _event.subscribers.push(msg.sender);
+      subscriberListCount++;
+      subscriberList[subscriberListCount] = Subscriber(_id, msg.sender);
       // Update the event
       events[_id] = _event;
       // Pay the owner by sending them Ether
