@@ -30,3 +30,8 @@
   padding: 10px 20px 10px 20px;
   border-radius: 20px;
 }
+
+.wallet-button:hover {
+  text-decoration: none;
+  color: #919194;
+}

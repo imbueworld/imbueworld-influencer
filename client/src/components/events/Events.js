@@ -151,9 +151,11 @@ class Events extends Component {
                         <Col
                          sm={3}
                         >
-                          <h5 className="start-event">
-                            START EVENT
-                          </h5>
+                           { !event.isStarted &&
+                            <h5 className="start-event" onClick={() => this.startEvent(event.id)}>
+                              START EVENT
+                            </h5>
+                          }
                         </Col>
                       </Row>
                     </div>
