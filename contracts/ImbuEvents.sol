@@ -13,6 +13,9 @@ contract ImbuEvents {
     address payable owner;
     string startTime;
     string endTime;
+    string streamId;
+    string StreamKey;
+    string playBackId;
     bool isStarted;
   }
   
@@ -44,14 +47,17 @@ contract ImbuEvents {
     address payable owner
   );
 
-  function createEvent(string memory _name, string memory _description, uint _price, string memory _startTime, string memory _endTime) public {
+  function createEvent(string memory _name, string memory _description, uint _price, string memory _startTime, string memory _endTime, string memory _streamId, string memory _streamKey, string memory _playBackId) public {
     require(bytes(_name).length > 0);
     require(bytes(_description).length > 0);
     require(_price >= 0);
     require(bytes(_startTime).length > 0);
     require(bytes(_endTime).length > 0);
+    require(bytes(_streamId).length > 0);
+    require(bytes(_streamKey).length > 0);
+    require(bytes(_playBackId).length > 0);
     eventCount ++;
-    events[eventCount] = Event(eventCount, _name, _description, _price, msg.sender,  _startTime, _endTime, false);
+    events[eventCount] = Event(eventCount, _name, _description, _price, msg.sender,  _startTime, _endTime, _streamId, _streamKey, _playBackId,  false);
 
     emit EventCreated(eventCount, _name, _price, _startTime, _endTime, msg.sender);
   }
