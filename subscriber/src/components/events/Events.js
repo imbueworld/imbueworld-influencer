@@ -73,7 +73,7 @@ class Events extends Component {
       }
 
       // Load events
-      for (var j = 1; j <= eventCount; j++) {
+      for (var i = 1; i <= eventCount; i++) {
         const event = await imbueEvents.methods.events(i).call();
         this.setState({
           events: [...this.state.events, event]
@@ -122,6 +122,7 @@ class Events extends Component {
 
   render() {
     const {events} = this.state;
+    console.log(events);
 
     return (
       <div className="home">
