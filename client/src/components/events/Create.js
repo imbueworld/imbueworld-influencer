@@ -5,6 +5,7 @@ import ImbueEventsContract from '../../contracts/ImbuEvents.json';
 import getWeb3 from "../../getWeb3";
 import DatetimeRangePicker from 'react-datetime-range-picker';
 import moment from 'moment';
+import axios from 'axios';
 
 import '../../bootstrap/dist/css/bootstrap.min.css';
 import './Create.css';
@@ -110,6 +111,7 @@ class Create extends Component {
   
   submitForm = (event) => {
     event.preventDefault();
+
     if (this.eventName.value === '') {
       this.setState({
         errorName: 'This field is required.'
@@ -119,19 +121,80 @@ class Create extends Component {
         errorDescription: 'This field is required.'
       });
     } else if (!this.state.isFreeOrPaid || (this.eventPrice && this.eventPrice.value !== '')) {
-      const name = this.eventName.value;
-      const description = this.eventDescrption.value;
+      const apiKey = '962f1c67-7c6c-4387-b271-c000c86c472a';
+      const streamName = 'test_stream';
+      const streamProfiles = [
+        {
+          name: "720p",
+          bitrate: 2000000,
+          fps: 30,
+          width: 1280,
+          height: 720,
+        },
+        {
+          name: "480p",
+          bitrate: 1000000,
+          fps: 30,
+          width: 854,
+          height: 480,
+        },
+        {
+          name: "360p",
+          bitrate: 500000,
+          fps: 30,
+          width: 640,
+          height: 360,
+        },
+      ];
+      const authorizationHeader = `Bearer ${apiKey}`;
 
-      let price = 0;
-      if (this.state.isFreeOrPaid) {
-        price = this.state.web3.utils.toWei(this.eventPrice.value.toString(), 'Ether');
-      } else {
-        price = this.state.web3.utils.toWei('0', 'Ether');
+      try {
+        const createStreamResponse = axios.post(
+          "https://livepeer.com/api/stream",
+          {
+            name: streamName,
+            profiles: streamProfiles,
+          },
+          {
+            headers: {
+              "content-type": "application/json",
+              authorization: authorizationHeader, // API Key needs to be passed as a header
+            },
+          }
+        );
+        
+        createStreamResponse.then((data) => {
+          const responseData = data;
+          if (responseData && responseData.data) {
+            const {id, streamKey, playbackId} = responseData.data;
+            const streamId = id;
+
+            const name = this.eventName.value;
+            const description = this.eventDescrption.value;
+
+            let price = 0;
+            if (this.state.isFreeOrPaid) {
+              price = this.state.web3.utils.toWei(this.eventPrice.value.toString(), 'Ether');
+            } else {
+              price = this.state.web3.utils.toWei('0', 'Ether');
+            }
+
+            let streamData = 'example stream data';
+            this.createEvent(name, description, price, this.state.startDate.toString(), this.state.endDate.toString(), streamData);
+
+          } else {
+            console.log("Something went wrong1");
+          }
+        });
+
+      } catch (error) {
+
+        // Handles Invalid API key error
+        if (error.response.status === 403) {
+          console.log("error 403");
+        }
+        console.log("Something went wrong");
       }
-
-      let streamData = 'example stream data';
-
-      this.createEvent(name, description, price, this.state.startDate.toString(), this.state.endDate.toString(), streamData);
     } else {
       this.setState({
         errorName: '',
