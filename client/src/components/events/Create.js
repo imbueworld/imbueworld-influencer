@@ -85,8 +85,8 @@ class Create extends Component {
     }
   }
 
-  createEvent = (name, description, price, startDate, endDate) => {
-    this.state.contract.methods.createEvent(name, description, price, startDate, endDate).send({ from: this.state.account })
+  createEvent = (name, description, price, startDate, endDate, streamData) => {
+    this.state.contract.methods.createEvent(name, description, price, startDate, endDate, streamData).send({ from: this.state.account })
     .on('receipt', () => {
       // redirect to events page
       var redirectLink = '/events';
@@ -122,13 +122,16 @@ class Create extends Component {
       const name = this.eventName.value;
       const description = this.eventDescrption.value;
 
+      let price = 0;
       if (this.state.isFreeOrPaid) {
-        const price = this.state.web3.utils.toWei(this.eventPrice.value.toString(), 'Ether');
-        this.createEvent(name, description, price, this.state.startDate.toString(), this.state.endDate.toString());
+        price = this.state.web3.utils.toWei(this.eventPrice.value.toString(), 'Ether');
       } else {
-        const price = this.state.web3.utils.toWei('0', 'Ether');
-        this.createEvent(name, description, price, this.state.startDate.toString(), this.state.endDate.toString());
+        price = this.state.web3.utils.toWei('0', 'Ether');
       }
+
+      let streamData = 'example stream data';
+
+      this.createEvent(name, description, price, this.state.startDate.toString(), this.state.endDate.toString(), streamData);
     } else {
       this.setState({
         errorName: '',
