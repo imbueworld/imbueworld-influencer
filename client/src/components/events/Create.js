@@ -167,7 +167,6 @@ class Create extends Component {
           const responseData = data;
           if (responseData && responseData.data) {
             const {id, streamKey, playbackId} = responseData.data;
-            const streamId = id;
 
             const name = this.eventName.value;
             const description = this.eventDescrption.value;
@@ -179,7 +178,7 @@ class Create extends Component {
               price = this.state.web3.utils.toWei('0', 'Ether');
             }
 
-            let streamData = 'example stream data';
+            let streamData = id + '&&' + streamKey + '&&' + playbackId;
             this.createEvent(name, description, price, this.state.startDate.toString(), this.state.endDate.toString(), streamData);
 
           } else {
