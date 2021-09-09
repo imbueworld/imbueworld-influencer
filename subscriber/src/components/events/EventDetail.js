@@ -160,10 +160,41 @@ class EventDetail extends Component {
   subscribeEvent = (id, price) => {
     let {subscriberList} = this.state
     this.state.contract.methods.subscribeEvent(id).send({from: this.state.account, value: price})
-    .on('receipt', (receipt) => {
+    .on('receipt', async(receipt) => {
       // redirect to events page
       subscriberList.push({eventId: id, subscriberAddress: receipt.from});
       this.setState({subscriberList: subscriberList});
+
+      await this.loadBlockchainData();
+      const { eventId } = this.props.match.params;
+      if (this.checkEventPurchased(eventId)) {
+        let streamData = CryptoJS.AES.decrypt(this.state.currentEvent[7], this.state.currentEvent.name).toString(CryptoJS.enc.Utf8).split('&&');
+        const [streamId, streamKey, playbackId, apiKey] = [...streamData];
+        const authorizationHeader = `Bearer ${apiKey}`;
+        if (streamId) {
+          interval = setInterval(async () => {
+            try {
+              const streamStatusResponse = await axios.get(
+                `/api/stream/${streamId}`,
+                {
+                  headers: {
+                    "content-type": "application/json",
+                    "authorization": authorizationHeader, // API Key needs to be passed as a header
+                  },
+                }
+              );
+              if (streamStatusResponse.data) {
+                const { isActive } = streamStatusResponse.data;
+                this.setState({
+                  streamIsActive : isActive
+                });
+              }
+            } catch (err) {
+              console.log(err)
+            }
+          }, 5000);
+        }
+      }
     })
     .on('confirmation', (receipt) => {
       console.log('event subscribed');
