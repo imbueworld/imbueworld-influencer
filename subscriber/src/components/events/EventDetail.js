@@ -81,7 +81,7 @@ class EventDetail extends Component {
     const {streamIsActive, videoElement} = this.state;
     if (prevProps.streamIsActive !== streamIsActive) {
       if (streamIsActive) {
-        let streamData = CryptoJS.AES.decrypt(this.state.currentEvent[7], this.state.currentEvent.name).toString(CryptoJS.enc.Utf8).split('&&');
+        let streamData = CryptoJS.AES.decrypt(this.state.currentEvent.streamData, this.state.currentEvent.name).toString(CryptoJS.enc.Utf8).split('&&');
         const [streamId, streamKey, playbackId, apiKey] = [...streamData];
         if (playbackId) {
           const player = videojs(videoElement, {

@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 import { Link } from "react-router-dom";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, OverlayTrigger, Popover } from "react-bootstrap";
 import ImbueEventsContract from '../../contracts/ImbuEvents.json';
 import getWeb3 from "../../getWeb3";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShareSquare } from '@fortawesome/free-solid-svg-icons';
+import { faShareSquare, faCopy } from '@fortawesome/free-solid-svg-icons';
 import './Events.css';
 const moment = require('moment');
+var CryptoJS = require("crypto-js");
 
 class Events extends Component {
   constructor(props) {
@@ -69,8 +70,13 @@ class Events extends Component {
     window.location.href = redirectPath;
   }
 
+  copyToClipboard = (streamKey) => {
+    navigator.clipboard.writeText(streamKey);
+  }
+
   render() {
     const {events, account} = this.state;
+    console.log(events)
     
     return (
       <div className="home">
@@ -120,9 +126,23 @@ class Events extends Component {
                   }}>
                     <Link className="wallet-button" to="/event/create">CREATE EVENTS</Link>
                   </div>
-                  {events.filter((event) => event.owner === account).map((event, index) => (
+                  {events.filter((event) => event.owner === account).map((event, index) => {
+                    console.log(event.streamData)
+                    let streamData = CryptoJS.AES.decrypt(event.streamData, event.name).toString(CryptoJS.enc.Utf8).split('&&')
+                    let streamKey = streamData[1];
+                    return (
+                    <OverlayTrigger trigger="click" placement="top" key={index} overlay={
+                      <Popover id="popover-basic">
+                        <Popover.Title as="h3">Stream Key</Popover.Title>
+                        <Popover.Content>
+                          {streamKey}&nbsp;&nbsp;&nbsp;
+                          <FontAwesomeIcon icon={faCopy} 
+                            onClick={() => this.copyToClipboard(streamKey)}
+                            style={{ cursor: 'pointer' }} />
+                        </Popover.Content>
+                      </Popover>
+                    }>
                     <div
-                      key={index}
                       style={{
                         backgroundColor: "#242429",
                         borderRadius: 20,
@@ -166,7 +186,9 @@ class Events extends Component {
                         </Col>
                       </Row>
                     </div>
-                  ))}
+                    </OverlayTrigger>)
+                  })
+                }
               </div>)
             :
             ( <div
