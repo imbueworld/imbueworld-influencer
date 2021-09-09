@@ -6,7 +6,7 @@ import ImbueEventsContract from '../../contracts/ImbuEvents.json';
 import getWeb3 from "../../getWeb3";
 import ethereum from '../../images/ethereum.jpg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShareSquare } from '@fortawesome/free-solid-svg-icons';
+import { faShareSquare, faCircleNotch } from '@fortawesome/free-solid-svg-icons';
 import './Events.css';
 const moment = require('moment');
 
@@ -27,6 +27,7 @@ class Events extends Component {
       address: '',
       events: [],
       subscriberList: [],
+      isLoading: false,
     }
   }
 
@@ -81,17 +82,20 @@ class Events extends Component {
   subscribeEvent = (e, id, price) => {
     e.preventDefault();
     e.stopPropagation();
-    let {subscriberList} = this.state
+    let {subscriberList} = this.state;
+    this.setState({ isLoading: true});
     this.state.contract.methods.subscribeEvent(id).send({from: this.state.account, value: price})
     .on('receipt', (receipt) => {
       // redirect to events page
       subscriberList.push({eventId: id, subscriberAddress: receipt.from});
+      this.setState({ isLoading: false});
       this.setState({subscriberList: subscriberList});
     })
     .on('confirmation', (receipt) => {
       console.log('event subscribed');
     })
-    .on('error', function(error, receipt){
+    .on('error', (error, receipt) => {
+      this.setState({ isLoading: false});
       console.log(error);
     })
   }
@@ -120,7 +124,7 @@ class Events extends Component {
   }
 
   render() {
-    const {events, subscriberList} = this.state;
+    const {events, subscriberList, isLoading} = this.state;
 
     return (
       <div className="home">
@@ -229,19 +233,27 @@ class Events extends Component {
                         <Col
                          sm={3}
                         >
-                          {
-                            this.checkEventPurchased(event.id) ?
-                            <h5 onClick={() => this.redirectToEventDetail(event.id, event.name, event.owner)}
-                              className="start-event"
-                            >
-                              VISIT EVENT
-                            </h5>
-                            :
-                            <h5 onClick={(e) => this.subscribeEvent(e, event.id, event.price)}
+                          { isLoading ?
+                              (<h5 className="start-event" disabled={isLoading}>
+                                Purchasing Now...
+                                <FontAwesomeIcon icon={faCircleNotch} size="lg" spin />
+                              </h5>) 
+                              :
+                              (this.checkEventPurchased(event.id) ?
+                              <h5 onClick={() => this.redirectToEventDetail(event.id, event.name, event.owner)}
+                                className="start-event"
+                              >
+                                VISIT EVENT
+                              </h5>
+                              :
+                              <h5 onClick={(e) => this.subscribeEvent(e, event.id, event.price)}
+                                className="start-event"  
                               className="start-event"  
-                            >
-                              PURCHASE EVENT
-                            </h5>
+                                className="start-event"  
+                              >
+                                PURCHASE EVENT
+                              </h5>
+                              )
                           }
                         </Col>
                       </Row>
@@ -263,23 +275,7 @@ class Events extends Component {
                   color: "#303030",
                 }}
               >
-                NO UPCOMING EVENTS... CREATE ONE
-                <div style={{
-                  textAlign: "center",
-                  marginTop: 50
-                }}>
-                  <Link className="wallet-button" to="/event/create"
-                    style={{
-                      textDecoration: "none",
-                      letterSpacing: "1.5px",
-                      color: "#919194",
-                      fontSize: 10,
-                      backgroundColor: "#242429",
-                      padding: "10px 20px 10px 20px",
-                      borderRadius: "20px",
-                    }}
-                  >CREATE EVENTS</Link>
-                </div>
+                NO UPCOMING EVENTS... 
               </div>)
           }
           

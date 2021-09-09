@@ -34,7 +34,8 @@ class EventDetail extends Component {
       currentEvent: [],
       subscriberList: [],
       videoElement: null,
-      streamIsActive: false
+      streamIsActive: false,
+      isLoading: false,
     }
   }
 
@@ -151,6 +152,7 @@ class EventDetail extends Component {
 
   // subscribe Event using wallet
   subscribeEvent = (id, price) => {
+    this.setState({isLoading: true});
     let {subscriberList} = this.state
     this.state.contract.methods.subscribeEvent(id).send({from: this.state.account, value: price})
     .on('receipt', async(receipt) => {
@@ -188,11 +190,14 @@ class EventDetail extends Component {
           }, 5000);
         }
       }
+
+      this.setState({isLoading: false});
     })
     .on('confirmation', (receipt) => {
       console.log('event subscribed');
     })
-    .on('error', function(error, receipt){
+    .on('error', (error, receipt) => {
+      this.setState({isLoading: false});
       console.log(error);
     })
   }
@@ -209,12 +214,12 @@ class EventDetail extends Component {
       });
     }
 
-    return isPurchased;
+    return false;
   }
 
 
   render() {
-    const { walletBalance, address, currentEvent, streamIsActive } = this.state;
+    const { walletBalance, address, currentEvent, streamIsActive, isLoading } = this.state;
     const { eventId } = this.props.match.params;
 
     return (
@@ -313,7 +318,22 @@ class EventDetail extends Component {
                 }}
               >
                 {
-                  this.checkEventPurchased(eventId) ?
+                  isLoading ?
+                   (<a href="#" disabled="disabled"
+                      className="wallet-button" 
+                      style={{
+                        textDecoration: "none",
+                        letterSpacing: "1.5px",
+                        color: "#919194",
+                        fontSize: 15,
+                        backgroundColor: "#FFFFFF",
+                        padding: "10px 20px 10px 20px",
+                        border: "1px solid #000000",
+                        borderRadius: "20px",
+                      }}
+                    >PURCHASING NOW...</a>) 
+                   :
+                  (this.checkEventPurchased(eventId) ?
                     <div className="wallet-button" to="/connectors"
                       style={{
                         display: "inline-block",
@@ -342,6 +362,7 @@ class EventDetail extends Component {
                         borderRadius: "20px",
                       }}
                     >PURSHASE EVENT</a>
+                  )
                 }
               </div>
               }
