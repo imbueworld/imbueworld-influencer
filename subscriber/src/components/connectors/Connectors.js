@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useWeb3React } from "@web3-react/core";
 import { injected } from "../wallet/connectors";
 import { Container } from "react-bootstrap";
@@ -41,7 +41,8 @@ function WrongNetwork(props) {
             letterSpacing: "6px",
             fontFamily: "MyWebFont"
       }}>
-        MUST BE ON THE <br/>OPTIMISM NETWORK
+        MUST BE ON THE <br/>OPTIMISM NETWORK <br/>
+        <p style={{ fontSize: '16px', color: '#333', letterSpacing: '1px'}}>Please click <a target="_blank" href="https://chainid.link/?network=optimism">here</a> to connect optimism network.</p>
       </div>
     </div>
   );
@@ -49,8 +50,17 @@ function WrongNetwork(props) {
 
 function Connectors() {
   const { activate } = useWeb3React()
+  const [wrongNetwork, setWrongNetwork] = useState(false);
 
   async function connectWallet (e) {
+    const chainId = await injected.getChainId();
+
+    if (chainId != '0xa') { 
+      setWrongNetwork(true);
+      return;
+    }
+    
+    setWrongNetwork(false);
     try {
       await activate(injected);
       window.location = '/events';
@@ -134,7 +144,7 @@ function Connectors() {
             <img style={{ height: 30, position: "absolute", top: 5, right: 10 }} src={portis} alt='portis' />
           </span>
         </div>
-        <WrongNetwork networkStatus={true} />
+        <WrongNetwork networkStatus={wrongNetwork} />
       </Container>
     </div>
   );
