@@ -64,6 +64,11 @@ class Events extends Component {
     })
   }
 
+  goEventDetail = (event) => {
+    let redirectPath = `http://localhost:3001/event/${event[4]}/${event[0]}/${event[2]}`;
+    window.location.href = redirectPath;
+  }
+
   render() {
     const {events} = this.state;
     
@@ -147,7 +152,8 @@ class Events extends Component {
                           }
                         </Col>
                         <Col sm={1} style={{ color: "#FFFFFF", marginTop: 15 }}>
-                          <FontAwesomeIcon className='icon-share' icon={faShareSquare} size="lg" />
+                          <FontAwesomeIcon className='icon-share' icon={faShareSquare} size="lg" 
+                          onClick={() => this.goEventDetail(event)} />
                         </Col>
                         <Col
                          sm={3}

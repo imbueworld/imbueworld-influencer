@@ -46,7 +46,6 @@ class EventDetail extends Component {
       let streamData = CryptoJS.AES.decrypt(this.state.currentEvent[7], this.state.currentEvent.name).toString(CryptoJS.enc.Utf8).split('&&');
       const [streamId, streamKey, playbackId, apiKey] = [...streamData];
       const authorizationHeader = `Bearer ${apiKey}`;
-      console.log(streamKey);
       if (streamId) {
         interval = setInterval(async () => {
           try {

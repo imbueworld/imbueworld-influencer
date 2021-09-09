@@ -128,8 +128,6 @@ class Events extends Component {
 
   render() {
     const {events, subscriberList} = this.state;
-    console.log(events);
-    console.log(subscriberList)
 
     return (
       <div className="home">
