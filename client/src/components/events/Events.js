@@ -31,24 +31,19 @@ class Events extends Component {
     // Use web3 to get the user's accounts.
     const accounts = await web3.eth.getAccounts();
     this.setState({ account: accounts[0] });
-    const networkId = await web3.eth.net.getId();
-    const networkData = ImbueEventsContract.networks[networkId]
-    if(networkData) {
-      const imbueEvents = new web3.eth.Contract(ImbueEventsContract.abi, networkData.address);
-      this.setState({ web3, accounts, contract: imbueEvents });
+    // Load abi and address from testnet
+    const imbueEvents = new web3.eth.Contract(ImbueEventsContract.abi, '0x8dFB56aE3e2c906087498ccb69c723dfB37a720B');
+    this.setState({ web3, accounts, contract: imbueEvents });
       
-      const eventCount = await imbueEvents.methods.eventCount().call();
-      console.log(eventCount); 
-      this.setState({ eventCount });
-      // Load events
-      for (var i = 1; i <= eventCount; i++) {
-        const event = await imbueEvents.methods.events(i).call();
-        this.setState({
-          events: [...this.state.events, event]
-        })
-      }
-    } else {
-      window.alert('ImbueEvents contract not deployed to detected network.')
+    const eventCount = await imbueEvents.methods.eventCount().call();
+    console.log(eventCount); 
+    this.setState({ eventCount });
+    // Load events
+    for (var i = 1; i <= eventCount; i++) {
+      const event = await imbueEvents.methods.events(i).call();
+      this.setState({
+        events: [...this.state.events, event]
+      })
     }
   }
 

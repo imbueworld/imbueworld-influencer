@@ -131,29 +131,22 @@ class EventDetail extends Component {
       }
     })
 
-    const networkId = await web3.eth.net.getId();
-    const networkData = ImbueEventsContract.networks[networkId]
-    if(networkData) {
-      const imbueEvents = new web3.eth.Contract(ImbueEventsContract.abi, networkData.address);
-      this.setState({ web3, accounts, contract: imbueEvents });
+    // Load abi and address from testnet
+    const imbueEvents = new web3.eth.Contract(ImbueEventsContract.abi, '0x8dFB56aE3e2c906087498ccb69c723dfB37a720B');
+    this.setState({ web3, accounts, contract: imbueEvents });
 
-      // const eventCount = await imbueEvents.methods.eventCount().call();
-
-      // Load subscriberList
-      const subscriberListCount = await imbueEvents.methods.subscriberListCount().call();
-      for (var i = 1; i <= subscriberListCount; i++) {
-        const subscriber = await imbueEvents.methods.subscriberList(i).call();
-        this.setState({
-          subscriberList: [...this.state.subscriberList, subscriber]
-        })
-      }
-
-      // Load selected event with eventId
-      const event = await imbueEvents.methods.events(eventId).call();
-      this.setState({ currentEvent: event });
-    } else {
-      window.alert('ImbueEvents contract not deployed to detected network.')
+    // Load subscriberList
+    const subscriberListCount = await imbueEvents.methods.subscriberListCount().call();
+    for (var i = 1; i <= subscriberListCount; i++) {
+      const subscriber = await imbueEvents.methods.subscriberList(i).call();
+      this.setState({
+        subscriberList: [...this.state.subscriberList, subscriber]
+      })
     }
+
+    // Load selected event with eventId
+    const event = await imbueEvents.methods.events(eventId).call();
+    this.setState({ currentEvent: event });
   }
 
   // subscribe Event using wallet

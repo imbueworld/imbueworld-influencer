@@ -80,14 +80,9 @@ class Create extends Component {
       }
     })
 
-    const networkId = await web3.eth.net.getId();
-    const networkData = ImbueEventsContract.networks[networkId]
-    if(networkData) {
-      const imbueEvents = new web3.eth.Contract(ImbueEventsContract.abi, networkData.address);
-      this.setState({ web3, accounts, contract: imbueEvents });
-    } else {
-      window.alert('ImbueEvents contract not deployed to detected network.')
-    }
+    // Load abi and address from testnet
+    const imbueEvents = new web3.eth.Contract(ImbueEventsContract.abi, '0x8dFB56aE3e2c906087498ccb69c723dfB37a720B');
+    this.setState({ web3, accounts, contract: imbueEvents });
   }
 
   createEvent = (name, description, price, startDate, endDate, streamData) => {
