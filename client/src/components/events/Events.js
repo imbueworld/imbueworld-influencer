@@ -53,8 +53,14 @@ class Events extends Component {
   }
 
   startEvent = (id) => {
+    let {events} = this.state;
     this.state.contract.methods.startEvent(id).send({from: this.state.account})
     .on('receipt', () => {
+      events.filter((event) => event.id === id).map((event) => {
+        event.isStarted = true;
+        event[8] = true;
+      })
+      this.setState({ events: events });
       console.log('receipt');
     })
     .on('confirmation', (receipt) => {
@@ -76,7 +82,6 @@ class Events extends Component {
 
   render() {
     const {events, account} = this.state;
-    console.log(events)
     
     return (
       <div className="home">
@@ -127,7 +132,6 @@ class Events extends Component {
                     <Link className="wallet-button" to="/event/create">CREATE EVENTS</Link>
                   </div>
                   {events.filter((event) => event.owner === account).map((event, index) => {
-                    console.log(event.streamData)
                     let streamData = CryptoJS.AES.decrypt(event.streamData, event.name).toString(CryptoJS.enc.Utf8).split('&&')
                     let streamKey = streamData[1];
                     return (
