@@ -88,7 +88,13 @@ class Events extends Component {
   subscribeEvent = (e, id, price) => {
     e.preventDefault();
     e.stopPropagation();
+    let {subscriberList} = this.state
     this.state.contract.methods.subscribeEvent(id).send({from: this.state.account, value: price})
+    .on('receipt', (receipt) => {
+      // redirect to events page
+      subscriberList.push({eventId: id, subscriberAddress: receipt.from});
+      this.setState({subscriberList: subscriberList});
+    })
     .on('confirmation', (receipt) => {
       console.log('event subscribed');
     })
@@ -121,8 +127,9 @@ class Events extends Component {
   }
 
   render() {
-    const {events} = this.state;
+    const {events, subscriberList} = this.state;
     console.log(events);
+    console.log(subscriberList)
 
     return (
       <div className="home">
@@ -199,8 +206,10 @@ class Events extends Component {
                       style={{
                         backgroundColor: "#242429",
                         borderRadius: 20,
-                        marginTop: 40,
+                        marginTop: 20,
                         height: 60,
+                        marginBottom: 20,
+                        cursor: 'pointer'
                       }}
                     >
                       <Row>

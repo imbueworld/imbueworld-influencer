@@ -121,8 +121,9 @@ class Events extends Component {
                       style={{
                         backgroundColor: "#242429",
                         borderRadius: 20,
-                        marginTop: 40,
+                        marginTop: 20,
                         height: 60,
+                        marginBottom: 20
                       }}
                     >
                       <Row>

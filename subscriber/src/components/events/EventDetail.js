@@ -159,10 +159,15 @@ class EventDetail extends Component {
 
   // subscribe Event using wallet
   subscribeEvent = (id, price) => {
+    let {subscriberList} = this.state
     this.state.contract.methods.subscribeEvent(id).send({from: this.state.account, value: price})
+    .on('receipt', (receipt) => {
+      // redirect to events page
+      subscriberList.push({eventId: id, subscriberAddress: receipt.from});
+      this.setState({subscriberList: subscriberList});
+    })
     .on('confirmation', (receipt) => {
       console.log('event subscribed');
-      
     })
     .on('error', function(error, receipt){
       console.log(error);
