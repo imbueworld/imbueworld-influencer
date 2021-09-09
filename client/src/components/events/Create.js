@@ -287,55 +287,31 @@ class Create extends Component {
             </Form.Group>
             { isFreeOrPaid ? 
               (<div className="row">
-                <span className="mb-3 event-input btn-paid"
-                  onClick={this.setFree}
-                  style={{ marginRight: 40 }}
-                >
-                  <span className='btn-word-left'>FREE</span>
-                  <span className='btn-word-right'>PAID</span>
-                </span>
-                <span className="mb-3 event-input btn-paid"
-                  style={{ marginLeft: 40, backgroundColor: 'grey' }}
-                  onClick={this.setPaid}
-                >
-                  <span className='btn-word-left'
-                    style={{ color: "#f0f0f0" }}
-                  >FREE</span>
-                  <span className='btn-word-right'
-                    style={{ color: "#000000" }}
-                  >PAID</span>
-                </span>
-              </div>)
+              <span className="mb-3 event-input btn-paid">
+                <span className='btn-word-left hover-text' 
+                  onClick={this.setFree} 
+                  style={{ color: "#f0f0f0" }}>FREE</span>
+                <span className='btn-word-right'
+                 onClick={this.setPaid}
+                 style={{ color: "#000000" }}>PAID</span>
+              </span>
+            </div>)
               :
               (<div className="row">
-                <span className="mb-3 event-input btn-paid"
-                  onClick={this.setFree}
-                  style={{ marginRight: 40, backgroundColor: 'grey' }}
-                >
-                  <span className='btn-word-left'>FREE</span>
-                  <span className='btn-word-right'>PAID</span>
-                </span>
-                <span className="mb-3 event-input btn-paid"
-                  style={{ marginLeft: 40 }}
-                  onClick={this.setPaid}
-                >
-                  <span className='btn-word-left'
-                    style={{ color: "#f0f0f0" }}
-                  >FREE</span>
-                  <span className='btn-word-right'
-                    style={{ color: "#000000" }}
-                  >PAID</span>
-                </span>
-              </div>)
+              <span className="mb-3 event-input btn-paid"
+              >
+                <span className='btn-word-left' 
+                  onClick={this.setFree} 
+                  style={{ color: "#000000" }}>FREE</span>
+                <span className='btn-word-right hover-text'
+                 onClick={this.setPaid}
+                 style={{ color: "#f0f0f0" }}>PAID</span>
+              </span>
+            </div>)
             }
             { isFreeOrPaid && 
               <div className="row">
-                <Form.Group className="mb-3 event-empty" 
-                  style={{ marginRight: 40 }}>
-                </Form.Group>
-                <Form.Group className="mb-3 event-input event-price" controlId="formGroupPrice"
-                  style={{ marginLeft: 40 }}
-                >
+                <Form.Group className="mb-3 event-input event-price" controlId="formGroupPrice">
                   <Form.Control type="number" min={0} step='0.000001' placeholder="PRICE (DAI)" ref={(input) => { this.eventPrice = input }} />
                   { errorPrice !== '' && <span className='error-message'>This field is required.</span>}
                 </Form.Group>
