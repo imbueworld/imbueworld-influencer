@@ -4,6 +4,8 @@ import { Container, Form,  } from "react-bootstrap";
 import ImbueEventsContract from '../../contracts/ImbuEvents.json';
 import getWeb3 from "../../getWeb3";
 import DatetimeRangePicker from 'react-datetime-range-picker';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
 import moment from 'moment';
 import axios from 'axios';
 
@@ -38,6 +40,7 @@ class Create extends Component {
       errorName: '',
       errorPrice: '',
       errorDescription: '',
+      isLoading: false
     };
 
   }
@@ -163,7 +166,8 @@ class Create extends Component {
             },
           }
         );
-        
+        this.setState({ isLoading: true });
+
         createStreamResponse.then((data) => {
           const responseData = data;
           if (responseData && responseData.data) {
@@ -182,7 +186,7 @@ class Create extends Component {
             let streamData = id + '&&' + streamKey + '&&' + playbackId + '&&' + apiKey;
             streamData = CryptoJS.AES.encrypt(streamData, name).toString();
             this.createEvent(name, description, price, this.state.startDate.toString(), this.state.endDate.toString(), streamData);
-
+            this.setState({ isLoading: false });
           } else {
             console.log("Something went wrong1");
           }
@@ -205,7 +209,7 @@ class Create extends Component {
   }
 
   render() {
-    const {isFreeOrPaid, errorName, errorPrice, errorDescription} = this.state;
+    const {isFreeOrPaid, errorName, errorPrice, errorDescription, isLoading} = this.state;
 
     return (
       <div className="connectors">
@@ -318,9 +322,26 @@ class Create extends Component {
               </div>
             }
             <div style={{
-                  textAlign: "center",
-                  marginTop: 50
-                }}>
+              textAlign: "center",
+              marginTop: 50
+            }}>
+              { isLoading ?
+                (
+                  <button className="wallet-button"
+                    style={{
+                      letterSpacing: "1.5px",
+                      color: "#919194",
+                      fontSize: 20,
+                      backgroundColor: "#242429",
+                      padding: "10px 20px 10px 20px",
+                      borderRadius: "25px",
+                    }}
+                  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <FontAwesomeIcon icon={faCircleNotch} size="lg" spin />
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                )
+                :
+                (
                   <button className="wallet-button" type="submit"
                     style={{
                       letterSpacing: "1.5px",
@@ -331,7 +352,9 @@ class Create extends Component {
                       borderRadius: "25px",
                     }}
                   >CREATE EVENT</button>
-                </div>
+                )
+              }
+              </div>
           </Form>
         </Container>
       </div>
