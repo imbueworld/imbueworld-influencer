@@ -70,7 +70,7 @@ class Events extends Component {
   }
 
   render() {
-    const {events} = this.state;
+    const {events, account} = this.state;
     
     return (
       <div className="home">
@@ -120,7 +120,7 @@ class Events extends Component {
                   }}>
                     <Link className="wallet-button" to="/event/create">CREATE EVENTS</Link>
                   </div>
-                  {events.map((event, index) => (
+                  {events.filter((event) => event.owner === account).map((event, index) => (
                     <div
                       key={index}
                       style={{
