@@ -290,7 +290,7 @@ class Create extends Component {
               <span className="mb-3 event-input btn-paid">
                 <span className='btn-word-left hover-text' 
                   onClick={this.setFree} 
-                  style={{ color: "#f0f0f0" }}>FREE</span>
+                  style={{ color: "rgb(183 175 175)" }}>FREE</span>
                 <span className='btn-word-right'
                  onClick={this.setPaid}
                  style={{ color: "#000000" }}>PAID</span>
@@ -305,7 +305,7 @@ class Create extends Component {
                   style={{ color: "#000000" }}>FREE</span>
                 <span className='btn-word-right hover-text'
                  onClick={this.setPaid}
-                 style={{ color: "#f0f0f0" }}>PAID</span>
+                 style={{ color: "rgb(183 175 175)" }}>PAID</span>
               </span>
             </div>)
             }
