@@ -1,7 +1,7 @@
 /client/node_modules
 /client/src/contracts
 /subscriber/src/contracts
-
+/node_modules
 
 # IDE
 .idea

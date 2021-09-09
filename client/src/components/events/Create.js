@@ -327,7 +327,7 @@ class Create extends Component {
             }}>
               { isLoading ?
                 (
-                  <button className="wallet-button"
+                  <button className="wallet-button" disabled={isLoading}
                     style={{
                       letterSpacing: "1.5px",
                       color: "#919194",
