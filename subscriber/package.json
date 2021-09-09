@@ -10,7 +10,9 @@
     "@web3-react/core": "^6.1.9",
     "@web3-react/injected-connector": "^6.0.7",
     "axios": "^0.21.4",
+    "crypto-js": "^4.1.1",
     "hls.js": "^1.0.1",
+    "http-proxy-middleware": "^2.0.1",
     "moment": "^2.29.1",
     "mux.js": "^5.11.0",
     "react": "16.11.0",
@@ -21,9 +23,10 @@
     "react-router": "^5.2.1",
     "react-router-dom": "^5.3.0",
     "react-scripts": "3.2.0",
-    "videojs-contrib-hls": "5.15.0",
-    "videojs-contrib-quality-levels": "2.1.0",
-    "videojs-hls-quality-selector": "1.1.4",
+    "video.js": "^7.14.3",
+    "videojs-contrib-hls": "^5.15.0",
+    "videojs-contrib-quality-levels": "^2.1.0",
+    "videojs-hls-quality-selector": "^1.1.4",
     "web3": "1.2.2"
   },
   "scripts": {
@@ -46,5 +49,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "proxy": "https://livepeer.com"
 }

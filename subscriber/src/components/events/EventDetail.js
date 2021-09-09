@@ -5,7 +5,13 @@ import ImbueEventsContract from '../../contracts/ImbuEvents.json';
 import getWeb3 from "../../getWeb3";
 import './EventDetail.css';
 import ethereum from "../../images/ethereum.jpg";
+import videojs from "video.js";
+import videojsqualityselector from "videojs-hls-quality-selector";
+import 'video.js/dist/video-js.css';
+import axios from 'axios';
 const moment = require('moment');
+var CryptoJS = require("crypto-js");
+axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 
 function shortenText(text) {
   var ret = text;
@@ -14,6 +20,8 @@ function shortenText(text) {
   }
   return ret;
 }
+
+let interval;
 
 class EventDetail extends Component {
   constructor(props) {
@@ -25,11 +33,83 @@ class EventDetail extends Component {
       eventId: '',
       currentEvent: [],
       subscriberList: [],
+      videoElement: null,
+      streamIsActive: false
     }
   }
 
-  componentDidMount() {
-    this.loadBlockchainData();
+  componentDidMount = async() => {
+    await this.loadBlockchainData();
+    
+    const { eventId } = this.props.match.params;
+    if (this.checkEventPurchased(eventId)) {
+      let streamData = CryptoJS.AES.decrypt(this.state.currentEvent[7], this.state.currentEvent.name).toString(CryptoJS.enc.Utf8).split('&&');
+      const [streamId, streamKey, playbackId, apiKey] = [...streamData];
+      const authorizationHeader = `Bearer ${apiKey}`;
+      console.log(streamKey);
+      if (streamId) {
+        interval = setInterval(async () => {
+          try {
+            const streamStatusResponse = await axios.get(
+              `/api/stream/${streamId}`,
+              {
+                headers: {
+                  "content-type": "application/json",
+                  "authorization": authorizationHeader, // API Key needs to be passed as a header
+                },
+              }
+            );
+            if (streamStatusResponse.data) {
+              const { isActive } = streamStatusResponse.data;
+              this.setState({
+                streamIsActive : isActive
+              });
+            }
+          } catch (err) {
+            console.log(err)
+          }
+        }, 5000);
+      }
+    }
+  }
+
+  componentWillUnmount() {
+    clearInterval(interval);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.state.videoElement === null) return;
+    const {streamIsActive, videoElement} = this.state;
+    if (prevProps.streamIsActive !== streamIsActive) {
+      if (streamIsActive) {
+        let streamData = CryptoJS.AES.decrypt(this.state.currentEvent[7], this.state.currentEvent.name).toString(CryptoJS.enc.Utf8).split('&&');
+        const [streamId, streamKey, playbackId, apiKey] = [...streamData];
+        if (playbackId) {
+          const player = videojs(videoElement, {
+            autoplay: true,
+            controls: true,
+            sources: [
+              {
+                src: `https://cdn.livepeer.com/hls/${playbackId}/index.m3u8`,
+              },
+            ],
+          });
+
+          player.hlsQualitySelector = videojsqualityselector;
+          player.hlsQualitySelector();
+
+          player.on("error", () => {
+            player.src(`https://cdn.livepeer.com/hls/${playbackId}/index.m3u8`);
+          });
+        }
+      }
+    }
+  }
+
+  onVideo = (video) => {
+    this.setState({
+      videoElement: video
+    });
   }
 
   loadBlockchainData = async() => {
@@ -82,6 +162,7 @@ class EventDetail extends Component {
     this.state.contract.methods.subscribeEvent(id).send({from: this.state.account, value: price})
     .on('confirmation', (receipt) => {
       console.log('event subscribed');
+      
     })
     .on('error', function(error, receipt){
       console.log(error);
@@ -105,7 +186,7 @@ class EventDetail extends Component {
 
 
   render() {
-    const { walletBalance, address, currentEvent } = this.state;
+    const { walletBalance, address, currentEvent, streamIsActive } = this.state;
     const { eventId } = this.props.match.params;
 
     return (
@@ -169,48 +250,8 @@ class EventDetail extends Component {
                 <img style={{ width: 12, marginLeft: 10 }} src={ethereum} alt="ethereum" />
               </span>
             </div>
-            </div>
-          <div
-            style={{
-              alignItems: "center",
-              textAlign: "center",
-              marginTop: 50,
-            }}
-          >
-            {
-              this.checkEventPurchased(eventId) ?
-                <div className="wallet-button" to="/connectors"
-                  style={{
-                    display: "inline-block",
-                    cursor: "pointer",
-                    textDecoration: "none",
-                    letterSpacing: "1.5px",
-                    color: "#919194",
-                    fontSize: 15,
-                    backgroundColor: "#FFFFFF",
-                    padding: "10px 20px 10px 20px",
-                    border: "1px solid #000000",
-                    borderRadius: "20px",
-                    marginTop: '-100px'
-                  }}
-                >YOU'VE SUCCESSFULLY BOOKED</div>
-                :
-                <a href="#" onClick={() => this.subscribeEvent(currentEvent.id, currentEvent.price)}
-                  className="wallet-button" 
-                  style={{
-                    textDecoration: "none",
-                    letterSpacing: "1.5px",
-                    color: "#919194",
-                    fontSize: 15,
-                    backgroundColor: "#FFFFFF",
-                    padding: "10px 20px 10px 20px",
-                    border: "1px solid #000000",
-                    borderRadius: "20px",
-                    marginTop: '-100px'
-                  }}
-                >PURSHASE EVENT</a>
-            }
           </div>
+          
           <div
             style={{
               fontFamily: "LuloCleanW01-One",
@@ -220,11 +261,90 @@ class EventDetail extends Component {
               lineHeight: "31px",
               alignItems: "center",
               textAlign: "center",
-              marginTop: 15,
               letterSpacing: "6px",
-              marginTop: '30px'
+              marginTop: 30
             }}
             >
+            <div>
+              <div data-vjs-player>
+                <video
+                  className="video-js vjs-theme-city"
+                  style={{ width: '1100px', height: '500px' }}
+                  ref={this.onVideo}
+                  controls
+                  playsInline
+                />
+              </div>
+              { !streamIsActive &&
+              <div
+                style={{
+                  alignItems: "center",
+                  textAlign: "center",
+                  position: "relative",
+                  top: "-19rem"
+                }}
+              >
+                {
+                  this.checkEventPurchased(eventId) ?
+                    <div className="wallet-button" to="/connectors"
+                      style={{
+                        display: "inline-block",
+                        cursor: "pointer",
+                        textDecoration: "none",
+                        letterSpacing: "1.5px",
+                        color: "#919194",
+                        fontSize: 15,
+                        backgroundColor: "#FFFFFF",
+                        padding: "10px 20px 10px 20px",
+                        border: "1px solid #000000",
+                        borderRadius: "20px",
+                      }}
+                    >YOU'VE SUCCESSFULLY BOOKED</div>
+                    :
+                    <a href="#" onClick={() => this.subscribeEvent(currentEvent.id, currentEvent.price)}
+                      className="wallet-button" 
+                      style={{
+                        textDecoration: "none",
+                        letterSpacing: "1.5px",
+                        color: "#919194",
+                        fontSize: 15,
+                        backgroundColor: "#FFFFFF",
+                        padding: "10px 20px 10px 20px",
+                        border: "1px solid #000000",
+                        borderRadius: "20px",
+                      }}
+                    >PURSHASE EVENT</a>
+                }
+              </div>
+              }
+              <div
+                style={{
+                  backgroundColor: '#FFFFFF',
+                  border: '1px solid black',
+                  borderRadius: 20,
+                  width: 200,
+                  fontSize: 15,
+                  letterSpacing: 1,
+                  lineHeight: 1,
+                  position: "absolute",
+                  top: "11.5rem",
+                  left: "66rem"
+                }}
+              >
+                <div
+                  style={{
+                    display: 'inline-block',
+                    backgroundColor: `${streamIsActive ? "green" : "yellow"}`,
+                    width: 10,
+                    height: 10,
+                    border: `1px solid ${streamIsActive ? "green" : "yellow"}`,
+                    borderRadius: 5,
+                    marginRight: 10
+                  }}
+                ></div>
+                {streamIsActive ? "Live" : "Waiting for Video"}
+              </div>
+            </div>
             <Row>
               <Col md={2}>{currentEvent && currentEvent.name}</Col>
               <Col md={8}>{currentEvent && currentEvent.description}</Col>

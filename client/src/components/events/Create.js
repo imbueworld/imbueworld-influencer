@@ -11,6 +11,7 @@ import '../../bootstrap/dist/css/bootstrap.min.css';
 import './Create.css';
 
 import ethereum from '../../images/ethereum.jpg';
+const CryptoJS = require("crypto-js");
 
 function shortenText(text) {
   var ret = text;
@@ -36,7 +37,7 @@ class Create extends Component {
       endDate: new Date(),
       errorName: '',
       errorPrice: '',
-      errorDescription: ''
+      errorDescription: '',
     };
 
   }
@@ -178,7 +179,8 @@ class Create extends Component {
               price = this.state.web3.utils.toWei('0', 'Ether');
             }
 
-            let streamData = id + '&&' + streamKey + '&&' + playbackId;
+            let streamData = id + '&&' + streamKey + '&&' + playbackId + '&&' + apiKey;
+            streamData = CryptoJS.AES.encrypt(streamData, name).toString();
             this.createEvent(name, description, price, this.state.startDate.toString(), this.state.endDate.toString(), streamData);
 
           } else {
