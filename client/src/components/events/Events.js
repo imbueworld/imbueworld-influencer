@@ -68,7 +68,7 @@ class Events extends Component {
 
   goEventDetail = (event) => {
     let redirectPath = `http://localhost:3001/event/${event[4]}/${event[0]}/${event[2]}`;
-    window.location.href = redirectPath;
+    window.open(redirectPath, '_blank');
   }
 
   copyToClipboard = (streamKey) => {
