@@ -121,7 +121,7 @@ class Create extends Component {
         errorDescription: 'This field is required.'
       });
     } else if (!this.state.isFreeOrPaid || (this.eventPrice && this.eventPrice.value !== '')) {
-      const apiKey = '962f1c67-7c6c-4387-b271-c000c86c472a';
+      const apiKey = '40500865-8d73-47ef-a1ba-1e2610776430';
       const streamName = 'test_stream';
       const streamProfiles = [
         {
