@@ -90,6 +90,7 @@ class Create extends Component {
     this.state.contract.methods.createEvent(name, description, price, startDate, endDate, streamData).send({ from: this.state.account })
     .on('receipt', () => {
       // redirect to events page
+      this.setState({ isLoading: false });
       var redirectLink = '/events';
       this.props.history.push(redirectLink);
     })
@@ -184,7 +185,6 @@ class Create extends Component {
             let streamData = id + '&&' + streamKey + '&&' + playbackId + '&&' + apiKey;
             streamData = CryptoJS.AES.encrypt(streamData, name).toString();
             this.createEvent(name, description, price, this.state.startDate.toString(), this.state.endDate.toString(), streamData);
-            this.setState({ isLoading: false });
           } else {
             console.log("Something went wrong1");
           }

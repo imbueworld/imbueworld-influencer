@@ -155,7 +155,7 @@ class EventDetail extends Component {
   // subscribe Event using wallet
   subscribeEvent = async(id, price) => {
     // Check Optimism network is on
-    const chainId = await injected.getChainId();
+    /*const chainId = await injected.getChainId();
     if (chainId !== '0xa') {
       const redirectUrl = this.props.match.url;
       this.props.history.push({
@@ -164,7 +164,7 @@ class EventDetail extends Component {
         state: { wrongNetwork: true }
       })
       return;
-    }
+    }*/
 
     this.setState({isLoading: true});
     let {subscriberList} = this.state
