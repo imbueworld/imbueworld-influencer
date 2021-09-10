@@ -55,7 +55,7 @@ function Connectors() {
   async function connectWallet (e) {
     const chainId = await injected.getChainId();
 
-    if (chainId != '0xa') { 
+    if (chainId !== '0xa' && chainId !== '0x45' && chainId !== '0x2a') {
       setWrongNetwork(true);
       return;
     }
