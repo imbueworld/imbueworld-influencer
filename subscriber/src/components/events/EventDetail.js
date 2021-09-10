@@ -10,6 +10,7 @@ import videojs from "video.js";
 import videojsqualityselector from "videojs-hls-quality-selector";
 import 'video.js/dist/video-js.css';
 import axios from 'axios';
+import CONTRACT_ADDRESS from '../../common/contracts';
 const moment = require('moment');
 var CryptoJS = require("crypto-js");
 axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
@@ -134,7 +135,7 @@ class EventDetail extends Component {
     })
 
     // Load abi and address from testnet
-    const imbueEvents = new web3.eth.Contract(ImbueEventsContract.abi, '0x8dFB56aE3e2c906087498ccb69c723dfB37a720B');
+    const imbueEvents = new web3.eth.Contract(ImbueEventsContract.abi, CONTRACT_ADDRESS);
     this.setState({ web3, accounts, contract: imbueEvents });
 
     // Load subscriberList

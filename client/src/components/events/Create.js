@@ -13,6 +13,7 @@ import '../../bootstrap/dist/css/bootstrap.min.css';
 import './Create.css';
 
 import ethereum from '../../images/ethereum.jpg';
+import CONTRACT_ADDRESS from '../../common/contracts';
 const CryptoJS = require("crypto-js");
 
 function shortenText(text) {
@@ -81,7 +82,7 @@ class Create extends Component {
     })
 
     // Load abi and address from testnet
-    const imbueEvents = new web3.eth.Contract(ImbueEventsContract.abi, '0x8dFB56aE3e2c906087498ccb69c723dfB37a720B');
+    const imbueEvents = new web3.eth.Contract(ImbueEventsContract.abi, CONTRACT_ADDRESS);
     this.setState({ web3, accounts, contract: imbueEvents });
   }
 
@@ -173,9 +174,11 @@ class Create extends Component {
 
             let price = 0;
             if (this.state.isFreeOrPaid) {
-              price = this.state.web3.utils.toWei(this.eventPrice.value.toString(), 'Ether');
+              //price = this.state.web3.utils.toWei(this.eventPrice.value.toString(), 'Ether');
+              price = this.eventPrice.value.toString();
             } else {
-              price = this.state.web3.utils.toWei('0', 'Ether');
+              //price = this.state.web3.utils.toWei('0', 'Ether');
+              price = '0';
             }
 
             let streamData = id + '&&' + streamKey + '&&' + playbackId + '&&' + apiKey;

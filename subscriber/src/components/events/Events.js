@@ -8,6 +8,7 @@ import ethereum from '../../images/ethereum.jpg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShareSquare, faCircleNotch } from '@fortawesome/free-solid-svg-icons';
 import './Events.css';
+import CONTRACT_ADDRESS from '../../common/contracts';
 const moment = require('moment');
 
 function shortenText(text) {
@@ -55,7 +56,7 @@ class Events extends Component {
     })
 
     // Load abi and address from testnet
-    const imbueEvents = new web3.eth.Contract(ImbueEventsContract.abi, '0x8dFB56aE3e2c906087498ccb69c723dfB37a720B');
+    const imbueEvents = new web3.eth.Contract(ImbueEventsContract.abi, CONTRACT_ADDRESS);
     this.setState({ web3, accounts, contract: imbueEvents });
 
     const eventCount = await imbueEvents.methods.eventCount().call();

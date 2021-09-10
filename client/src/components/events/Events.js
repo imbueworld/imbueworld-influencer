@@ -6,6 +6,7 @@ import getWeb3 from "../../getWeb3";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShareSquare, faCopy } from '@fortawesome/free-solid-svg-icons';
 import './Events.css';
+import CONTRACT_ADDRESS from '../../common/contracts';
 const moment = require('moment');
 var CryptoJS = require("crypto-js");
 
@@ -32,9 +33,10 @@ class Events extends Component {
     const accounts = await web3.eth.getAccounts();
     this.setState({ account: accounts[0] });
     // Load abi and address from testnet
-    const imbueEvents = new web3.eth.Contract(ImbueEventsContract.abi, '0x8dFB56aE3e2c906087498ccb69c723dfB37a720B');
+    const imbueEvents = new web3.eth.Contract(ImbueEventsContract.abi, CONTRACT_ADDRESS);
     this.setState({ web3, accounts, contract: imbueEvents });
-      
+
+    debugger;
     const eventCount = await imbueEvents.methods.eventCount().call();
     console.log(eventCount); 
     this.setState({ eventCount });
