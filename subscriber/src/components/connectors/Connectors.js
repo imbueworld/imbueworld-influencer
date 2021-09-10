@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation, useHistory } from "react-router-dom";
 import { useWeb3React } from "@web3-react/core";
 import { injected } from "../wallet/connectors";
 import { Container } from "react-bootstrap";
@@ -51,6 +52,15 @@ function WrongNetwork(props) {
 function Connectors() {
   const { activate } = useWeb3React()
   const [wrongNetwork, setWrongNetwork] = useState(false);
+  const history = useHistory();
+  const search = useLocation().search;
+  const redirectLink = new URLSearchParams(search).get('redirectLink');
+
+  useEffect(() => {
+    if (redirectLink !== '') {
+      setWrongNetwork(true);
+    }
+  });
 
   async function connectWallet (e) {
     const chainId = await injected.getChainId();
@@ -63,7 +73,11 @@ function Connectors() {
     setWrongNetwork(false);
     try {
       await activate(injected);
-      window.location = '/events';
+      if (redirectLink !== '') {
+        history.push(redirectLink);
+      } else {
+        history.push('/events');
+      }
     } catch (ex) {
       console.log(ex)
     }

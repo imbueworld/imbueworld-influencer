@@ -3,6 +3,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import { withRouter } from 'react-router';
 import ImbueEventsContract from '../../contracts/ImbuEvents.json';
 import getWeb3 from "../../getWeb3";
+import { injected } from "../wallet/connectors";
 import './EventDetail.css';
 import ethereum from "../../images/ethereum.jpg";
 import videojs from "video.js";
@@ -151,7 +152,19 @@ class EventDetail extends Component {
   }
 
   // subscribe Event using wallet
-  subscribeEvent = (id, price) => {
+  subscribeEvent = async(id, price) => {
+    // Check Optimism network is on
+    const chainId = await injected.getChainId();
+    if (chainId !== '0xa') {
+      const redirectUrl = this.props.match.url;
+      this.props.history.push({
+        pathname: '/connectors',
+        search: '?redirectLink=' + redirectUrl,
+        state: { wrongNetwork: true }
+      })
+      return;
+    }
+
     this.setState({isLoading: true});
     let {subscriberList} = this.state
     this.state.contract.methods.subscribeEvent(id).send({from: this.state.account, value: price})
@@ -214,7 +227,7 @@ class EventDetail extends Component {
       });
     }
 
-    return false;
+    return isPurchased;
   }
 
 
