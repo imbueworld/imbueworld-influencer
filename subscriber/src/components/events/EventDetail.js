@@ -38,6 +38,7 @@ class EventDetail extends Component {
       videoElement: null,
       streamIsActive: false,
       isLoading: false,
+      insufficientFund : false,
     }
   }
 
@@ -125,14 +126,14 @@ class EventDetail extends Component {
     // Get Wallet Address and Balance
     this.setState({ address: web3.currentProvider.selectedAddress});
 
-    const thisstate = this;
+    /*const thisstate = this;
     web3.eth.getBalance(web3.currentProvider.selectedAddress, function(err, result) {
       if (err) {
         console.log(err)
       } else {
         thisstate.setState({ walletBalance: web3.utils.fromWei(result, "ether")});
       }
-    })
+    })*/
 
     // Load abi and address from testnet
     const imbueEvents = new web3.eth.Contract(ImbueEventsContract.abi, CONTRACT_ADDRESS);
@@ -150,6 +151,13 @@ class EventDetail extends Component {
     // Load selected event with eventId
     const event = await imbueEvents.methods.events(eventId).call();
     this.setState({ currentEvent: event });
+
+    // check user has enough dai or not.
+    const balance = await this.state.contract.methods.getDaiBalance(this.state.account).call();
+    this.setState({ walletBalance: web3.utils.fromWei(balance, "ether")});
+    if (parseFloat(balance) < parseFloat(event.price)) {
+      this.setState({insufficientFund: true});
+    }
   }
 
   // subscribe Event using wallet
@@ -165,6 +173,13 @@ class EventDetail extends Component {
       })
       return;
     }*/
+
+    // check account balance
+    const balance = await this.state.contract.methods.getDaiBalance(this.state.account).call({from: this.state.account});
+    if (parseFloat(balance) < parseFloat(price)) {
+      this.setState({insufficientFund: true});
+      return;
+    }
 
     this.setState({isLoading: true});
     let {subscriberList} = this.state
@@ -208,6 +223,7 @@ class EventDetail extends Component {
       this.setState({isLoading: false});
     })
     .on('confirmation', (receipt) => {
+      this.setState({isLoading: false});
       console.log('event subscribed');
     })
     .on('error', (error, receipt) => {
@@ -231,9 +247,88 @@ class EventDetail extends Component {
     return isPurchased;
   }
 
+  renderButtons = () => {
+    const { currentEvent, isLoading, insufficientFund } = this.state;
+    const { eventId } = this.props.match.params
+
+    if (isLoading) {
+      return (
+        <a href="#" disabled="disabled"
+           className="wallet-button"
+           style={{
+             textDecoration: "none",
+             letterSpacing: "1.5px",
+             color: "#919194",
+             fontSize: 15,
+             backgroundColor: "#FFFFFF",
+             padding: "10px 20px 10px 20px",
+             border: "1px solid #000000",
+             borderRadius: "20px",
+           }}
+        >PURCHASING NOW...</a>
+      );
+    } else {
+      if(this.checkEventPurchased(eventId)) {
+        return (
+          <div className="wallet-button" to="/connectors"
+           style={{
+             display: "inline-block",
+             cursor: "pointer",
+             textDecoration: "none",
+             letterSpacing: "1.5px",
+             color: "#919194",
+             fontSize: 15,
+             backgroundColor: "#FFFFFF",
+             padding: "10px 20px 10px 20px",
+             border: "1px solid #000000",
+             borderRadius: "20px",
+           }}
+          >YOU'VE SUCCESSFULLY BOOKED</div>
+        )
+      } else {
+        if(insufficientFund) {
+          return (
+            <div className="wallet-button" to="/connectors"
+                 style={{
+                   display: "inline-block",
+                   cursor: "pointer",
+                   textDecoration: "none",
+                   letterSpacing: "1.5px",
+                   color: "#919194",
+                   fontSize: 15,
+                   backgroundColor: "#FFFFFF",
+                   padding: "10px 20px 10px 20px",
+                   border: "1px solid #000000",
+                   borderRadius: "20px",
+                 }}
+            >WRONG <br/>CURRENCY OR <br/>INSUFFICIENT FUNDS<br/>
+              <div style={{marginTop: "5px", marginBottom: "5px"}}>
+                <a style={{background: "#333", paddingTop: "13px", paddingBottom: "13px", paddingLeft: "36px", paddingRight: "36px", borderRadius: "50px", color: "white" }} href="https://app.uniswap.org/#/swap" target="_blank">SWAP TO DAI</a>
+              </div>
+            </div>
+          )
+        } else {
+          return (
+            <a href="#" onClick={() => this.subscribeEvent(currentEvent.id, currentEvent.price)}
+               style={{
+                 textDecoration: "none",
+                 letterSpacing: "1.5px",
+                 color: "#919194",
+                 fontSize: 15,
+                 backgroundColor: "#FFFFFF",
+                 padding: "10px 20px 10px 20px",
+                 border: "1px solid #000000",
+                 borderRadius: "20px",
+               }}
+            >PURCHASE EVENT</a>
+          )
+        }
+      }
+    }
+  }
 
   render() {
-    const { walletBalance, address, currentEvent, streamIsActive, isLoading } = this.state;
+    const { walletBalance, address, currentEvent, streamIsActive } = this.state;
     const { eventId } = this.props.match.params;
 
     return (
@@ -286,7 +381,7 @@ class EventDetail extends Component {
               letterSpacing: 3,
               width: "285px"
               }}>
-              <span>{ Math.round(walletBalance * 100000) / 100000 + 'ETH' }</span>
+              <span>{ Math.round(walletBalance * 100000) / 100000 + 'DAI' }</span>
               <span style={{ 
                 marginLeft: 10, 
                 padding: "5px 8px", 
@@ -331,53 +426,7 @@ class EventDetail extends Component {
                   top: "-19rem"
                 }}
               >
-                {
-                  isLoading ?
-                   (<a href="#" disabled="disabled"
-                      className="wallet-button" 
-                      style={{
-                        textDecoration: "none",
-                        letterSpacing: "1.5px",
-                        color: "#919194",
-                        fontSize: 15,
-                        backgroundColor: "#FFFFFF",
-                        padding: "10px 20px 10px 20px",
-                        border: "1px solid #000000",
-                        borderRadius: "20px",
-                      }}
-                    >PURCHASING NOW...</a>) 
-                   :
-                  (this.checkEventPurchased(eventId) ?
-                    <div className="wallet-button" to="/connectors"
-                      style={{
-                        display: "inline-block",
-                        cursor: "pointer",
-                        textDecoration: "none",
-                        letterSpacing: "1.5px",
-                        color: "#919194",
-                        fontSize: 15,
-                        backgroundColor: "#FFFFFF",
-                        padding: "10px 20px 10px 20px",
-                        border: "1px solid #000000",
-                        borderRadius: "20px",
-                      }}
-                    >YOU'VE SUCCESSFULLY BOOKED</div>
-                    :
-                    <a href="#" onClick={() => this.subscribeEvent(currentEvent.id, currentEvent.price)}
-                      className="wallet-button" 
-                      style={{
-                        textDecoration: "none",
-                        letterSpacing: "1.5px",
-                        color: "#919194",
-                        fontSize: 15,
-                        backgroundColor: "#FFFFFF",
-                        padding: "10px 20px 10px 20px",
-                        border: "1px solid #000000",
-                        borderRadius: "20px",
-                      }}
-                    >PURSHASE EVENT</a>
-                  )
-                }
+                { this.renderButtons() }
               </div>
               }
               <div

@@ -1,5 +1,15 @@
-pragma solidity 0.5.16;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/IERC20.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/ERC20.sol";
+
+/*interface IDai {
+  function balanceOf(address _owner) external view returns (uint256 balance);
+  function transferFrom(address _from, address _to, uint256 _value) external returns (bool success);
+}*/
+
 contract ImbuEvents {
+  address daiAddress = address(0xaD6D458402F60fD3Bd25163575031ACDce07538D);
   uint public eventCount = 0;
   uint public subscriberListCount = 0;
   mapping(uint => Event) public events;
@@ -10,16 +20,16 @@ contract ImbuEvents {
     string name;
     string description;
     uint price;
-    address payable owner;
+    address owner;
     string startTime;
     string endTime;
     string streamData;
     bool isStarted;
   }
-  
+
   struct Subscriber {
     uint eventId;
-    address payable subscriberAddress;
+    address subscriberAddress;
   }
 
   event EventCreated(
@@ -28,21 +38,21 @@ contract ImbuEvents {
     uint price,
     string startTime,
     string endTime,
-    address payable owner
+    address owner
   );
 
   event EventPurchased(
     uint id,
     string name,
     uint price,
-    address payable subscriber
+    address subscriber
   );
 
   event EventStarted(
     uint id,
     string name,
     uint price,
-    address payable owner
+    address owner
   );
 
   function createEvent(string memory _name, string memory _description, uint _price, string memory _startTime, string memory _endTime, string memory _streamData) public {
@@ -62,8 +72,8 @@ contract ImbuEvents {
     // Get the event
     Event storage _event = events[_id];
     // Get the owner
-    address payable _owner = _event.owner;
-    // Validation id, enough Ether, 
+    address _owner = _event.owner;
+    // Validation id, enough Ether,
     require(_event.id > 0 && _event.id <= eventCount);
     // Require that there is enough Ether in the transaction
     require(msg.value >= _event.price);
@@ -82,8 +92,8 @@ contract ImbuEvents {
       subscriberListCount++;
       subscriberList[subscriberListCount] = Subscriber(_id, msg.sender);
       // Pay the owner by sending them Ether
-      address(_owner).transfer(msg.value);
-      
+      IERC20(daiAddress).transferFrom(msg.sender, _owner, msg.value);
+
       emit EventPurchased(_id, _event.name, _event.price, msg.sender);
     }
   }
@@ -95,5 +105,9 @@ contract ImbuEvents {
 
     emit EventStarted(_id, _event.name, _event.price, msg.sender);
   }
-  
+
+  function getDaiBalance(address _address) public view returns(uint balance) {
+    balance = IERC20(daiAddress).balanceOf(_address);
+  }
+
 }

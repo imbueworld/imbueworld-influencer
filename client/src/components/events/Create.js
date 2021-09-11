@@ -95,10 +95,10 @@ class Create extends Component {
       this.props.history.push(redirectLink);
     })
     .on('confirmation', (confirmationNumber, receipt) => {
-      console.log('confirmation');
+      this.setState({isLoading: false});
     })
     .on('error', (error, receipt) => {
-      console.log("error");
+      this.setState({isLoading: false});
     })
   }
 
@@ -175,11 +175,9 @@ class Create extends Component {
 
             let price = 0;
             if (this.state.isFreeOrPaid) {
-              //price = this.state.web3.utils.toWei(this.eventPrice.value.toString(), 'Ether');
-              price = this.eventPrice.value.toString();
+              price = this.state.web3.utils.toWei(this.eventPrice.value.toString(), 'Ether');
             } else {
-              //price = this.state.web3.utils.toWei('0', 'Ether');
-              price = '0';
+              price = this.state.web3.utils.toWei('0', 'Ether');
             }
 
             let streamData = id + '&&' + streamKey + '&&' + playbackId + '&&' + apiKey;
