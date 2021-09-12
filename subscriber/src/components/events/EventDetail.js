@@ -201,8 +201,15 @@ class EventDetail extends Component {
     console.log("allowance", this.state.web3.utils.fromWei(allowance));
     console.log(this.state.currentEvent.price);
     //if (this.state.web3.utils.toWei(allowance) < this.state.web3.utils.toWei(this.state.currentEvent.price)) {
-    const isApproved = await this.state.daiToken.methods.approve(CONTRACT_ADDRESS, this.state.currentEvent.price).send({from: this.state.account});
+    //  await this.state.daiToken.methods.approve(CONTRACT_ADDRESS, this.state.currentEvent.price).send({from: this.state.account});
     //}
+    // Check approved
+    try {
+      await this.state.daiToken.methods.approve(CONTRACT_ADDRESS, this.state.currentEvent.price).send({from: this.state.account});
+    }catch (error) {
+      this.setState({isLoading: false});
+      return;
+    }
 
     let {subscriberList} = this.state
     this.state.contract.methods.subscribeEvent(id).send({from: this.state.account})
