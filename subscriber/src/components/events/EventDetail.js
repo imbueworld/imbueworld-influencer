@@ -60,7 +60,7 @@ class EventDetail extends Component {
     await this.loadBlockchainData();
     
     const { eventId } = this.props.match.params;
-    if (this.checkEventPurchased(eventId)) {
+    if (this.checkEventPurchased(eventId) && this.state.currentEvent.isStarted) {
       let streamData = CryptoJS.AES.decrypt(this.state.currentEvent[7], this.state.currentEvent.name).toString(CryptoJS.enc.Utf8).split('&&');
       const [streamId, streamKey, playbackId, apiKey] = [...streamData];
       const authorizationHeader = `Bearer ${apiKey}`;
@@ -220,7 +220,7 @@ class EventDetail extends Component {
 
       await this.loadBlockchainData();
       const { eventId } = this.props.match.params;
-      if (this.checkEventPurchased(eventId)) {
+      if (this.checkEventPurchased(eventId) && this.state.currentEvent.isStarted) {
         let streamData = CryptoJS.AES.decrypt(this.state.currentEvent[7], this.state.currentEvent.name).toString(CryptoJS.enc.Utf8).split('&&');
         const [streamId, streamKey, playbackId, apiKey] = [...streamData];
         const authorizationHeader = `Bearer ${apiKey}`;
