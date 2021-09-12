@@ -32,15 +32,14 @@ class Events extends Component {
     // Use web3 to get the user's accounts.
     const accounts = await web3.eth.getAccounts();
     this.setState({ account: accounts[0] });
+
     // Load abi and address from testnet
     const imbueEvents = new web3.eth.Contract(ImbueEventsContract.abi, CONTRACT_ADDRESS);
     this.setState({ web3, accounts, contract: imbueEvents });
 
-    debugger;
-    const eventCount = await imbueEvents.methods.eventCount().call();
-    console.log(eventCount); 
-    this.setState({ eventCount });
     // Load events
+    const eventCount = await imbueEvents.methods.eventCount().call();
+    this.setState({ eventCount });
     for (var i = 1; i <= eventCount; i++) {
       const event = await imbueEvents.methods.events(i).call();
       this.setState({
@@ -153,15 +152,10 @@ class Events extends Component {
                       }}
                     >
                       <Row>
-                        <Col sm={2}>
-                          <h4 style={{ color: "#FFFFFF", marginTop: 13, textAlign: 'left', paddingLeft: 30, letterSpacing: 2 }}>
+                        <Col sm={5}>
+                          <h4 title={event.description} style={{ color: "#FFFFFF", marginTop: 13, textAlign: 'left', paddingLeft: 30, letterSpacing: 2 }}>
                             {event.name}
                           </h4>
-                        </Col>
-                        <Col sm={3}>
-                          <h5 style={{ textAlign: "center", marginTop: "13px", color: "#bbb", fontSize: '1.5rem' }}>
-                            {event.description}
-                          </h5>
                         </Col>
                         <Col sm={3} style={{ color: "#FFFFFF", marginTop: 8 }}>
                           {

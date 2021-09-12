@@ -127,15 +127,6 @@ class EventDetail extends Component {
     // Get Wallet Address and Balance
     this.setState({ address: web3.currentProvider.selectedAddress});
 
-    /*const thisstate = this;
-    web3.eth.getBalance(web3.currentProvider.selectedAddress, function(err, result) {
-      if (err) {
-        console.log(err)
-      } else {
-        thisstate.setState({ walletBalance: web3.utils.fromWei(result, "ether")});
-      }
-    })*/
-
     // Load abi and address from testnet
     const imbueEvents = new web3.eth.Contract(ImbueEventsContract.abi, CONTRACT_ADDRESS);
     const daiToken = new web3.eth.Contract(DaiContract, "0xad6d458402f60fd3bd25163575031acdce07538d");
@@ -188,7 +179,7 @@ class EventDetail extends Component {
     const allowance = await this.state.daiToken.methods.allowance(this.state.account, CONTRACT_ADDRESS).call({from: this.state.account});
     console.log("allowance", this.state.web3.utils.fromWei(allowance));
     console.log(this.state.currentEvent.price);
-    //if (this.state.web3.utils.toWei(allowance)< this.state.web3.utils.toWei(this.state.currentEvent.price)) {
+    //if (this.state.web3.utils.toWei(allowance) < this.state.web3.utils.toWei(this.state.currentEvent.price)) {
       await this.state.daiToken.methods.approve(CONTRACT_ADDRESS, this.state.currentEvent.price).send({from: this.state.account});
     //}
 

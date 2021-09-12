@@ -209,15 +209,10 @@ class Events extends Component {
                       }}
                     >
                       <Row>
-                        <Col sm={3}>
-                          <h4 style={{ color: "#FFFFFF", marginTop: 13, textAlign: 'left', paddingLeft: 50, letterSpacing: 2 }}>
+                        <Col sm={6}>
+                          <h4 title={event.description} style={{ color: "#FFFFFF", marginTop: 13, textAlign: 'left', paddingLeft: 30, letterSpacing: 2 }}>
                             {event.name}
                           </h4>
-                        </Col>
-                        <Col sm={3}>
-                          <h5 style={{ textAlign: "center", marginTop: "13px", color: "#bbb", fontSize: '1.5rem' }}>
-                            {event.description}
-                          </h5>
                         </Col>
                         <Col sm={3} style={{ color: "#FFFFFF", marginTop: 8 }}>
                           {
