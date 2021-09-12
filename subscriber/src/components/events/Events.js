@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShareSquare, faCircleNotch } from '@fortawesome/free-solid-svg-icons';
 import './Events.css';
 import CONTRACT_ADDRESS from '../../common/contracts';
+import DaiContract from "../../contracts/DAI.json";
 const moment = require('moment');
 
 function shortenText(text) {
@@ -46,18 +47,10 @@ class Events extends Component {
     // Get Wallet Address and Balance
     this.setState({ address: web3.currentProvider.selectedAddress});
 
-    const thisstate = this;
-    web3.eth.getBalance(web3.currentProvider.selectedAddress, function(err, result) {
-      if (err) {
-        console.log(err)
-      } else {
-        thisstate.setState({ walletBalance: web3.utils.fromWei(result, "ether")});
-      }
-    })
-
     // Load abi and address from testnet
     const imbueEvents = new web3.eth.Contract(ImbueEventsContract.abi, CONTRACT_ADDRESS);
-    this.setState({ web3, accounts, contract: imbueEvents });
+    const daiToken = new web3.eth.Contract(DaiContract, "0xad6d458402f60fd3bd25163575031acdce07538d");
+    this.setState({ web3, accounts, contract: imbueEvents, daiToken: daiToken });
 
     const eventCount = await imbueEvents.methods.eventCount().call();
     console.log(eventCount); 
@@ -77,6 +70,10 @@ class Events extends Component {
         events: [...this.state.events, event]
       })
     }
+
+    // Load Dai Balance
+    const balance = await this.state.daiToken.methods.balanceOf(this.state.account).call({from: this.state.account});
+    this.setState({ walletBalance: web3.utils.fromWei(balance, "ether")});
   }
 
   // subscribe Event using wallet

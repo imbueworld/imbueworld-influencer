@@ -44,6 +44,19 @@ class EventDetail extends Component {
   }
 
   componentDidMount = async() => {
+    // Check network is Optimism Valid
+    const chainId = await injected.getChainId();
+    //if (chainId !== '0xa') {
+    if (chainId !== '0x3') {
+      const redirectUrl = this.props.match.url;
+      this.props.history.push({
+        pathname: '/connectors',
+        search: '?redirectLink=' + redirectUrl,
+        state: { wrongNetwork: true }
+      })
+      return;
+    }
+
     await this.loadBlockchainData();
     
     const { eventId } = this.props.match.params;
@@ -148,9 +161,17 @@ class EventDetail extends Component {
     // check user has enough dai or not.
     const balance = await this.state.daiToken.methods.balanceOf(this.state.account).call({from: this.state.account});
     this.setState({ walletBalance: web3.utils.fromWei(balance, "ether")});
-    if (parseFloat(balance) < parseFloat(event.price)) {
-      this.setState({insufficientFund: true});
-    }
+
+    // check if user has sufficient dai balance
+    this.interval = setInterval(async() => {
+      const balance = await this.state.daiToken.methods.balanceOf(this.state.account).call({from: this.state.account});
+      const insufficientFund = parseFloat(balance) < parseFloat(this.state.currentEvent.price);
+      this.setState({insufficientFund});
+    }, 3000)
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   // subscribe Event using wallet
@@ -180,7 +201,7 @@ class EventDetail extends Component {
     console.log("allowance", this.state.web3.utils.fromWei(allowance));
     console.log(this.state.currentEvent.price);
     //if (this.state.web3.utils.toWei(allowance) < this.state.web3.utils.toWei(this.state.currentEvent.price)) {
-      await this.state.daiToken.methods.approve(CONTRACT_ADDRESS, this.state.currentEvent.price).send({from: this.state.account});
+    const isApproved = await this.state.daiToken.methods.approve(CONTRACT_ADDRESS, this.state.currentEvent.price).send({from: this.state.account});
     //}
 
     let {subscriberList} = this.state
@@ -304,7 +325,8 @@ class EventDetail extends Component {
                  }}
             >WRONG <br/>CURRENCY OR <br/>INSUFFICIENT FUNDS<br/>
               <div style={{marginTop: "5px", marginBottom: "5px"}}>
-                <a style={{background: "#333", paddingTop: "13px", paddingBottom: "13px", paddingLeft: "36px", paddingRight: "36px", borderRadius: "50px", color: "white" }} href="https://app.uniswap.org/#/swap" target="_blank">SWAP TO DAI</a>
+                <a style={{background: "#333", paddingTop: "13px", paddingBottom: "13px", paddingLeft: "36px", paddingRight: "36px", borderRadius: "50px", color: "white" }}
+                   href="https://app.uniswap.org/#/swap" target="_blank">SWAP TO DAI</a>
               </div>
             </div>
           )
