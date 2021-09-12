@@ -1,12 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity 0.8.0;
 import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/IERC20.sol";
 import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/ERC20.sol";
-
-/*interface IDai {
-  function balanceOf(address _owner) external view returns (uint256 balance);
-  function transferFrom(address _from, address _to, uint256 _value) external returns (bool success);
-}*/
 
 contract ImbuEvents {
   address daiAddress = address(0xaD6D458402F60fD3Bd25163575031ACDce07538D);
@@ -68,15 +63,13 @@ contract ImbuEvents {
     emit EventCreated(eventCount, _name, _price, _startTime, _endTime, msg.sender);
   }
 
-  function subscribeEvent(uint _id) public payable {
+  function subscribeEvent(uint _id) payable public {
     // Get the event
     Event storage _event = events[_id];
     // Get the owner
     address _owner = _event.owner;
     // Validation id, enough Ether,
     require(_event.id > 0 && _event.id <= eventCount);
-    // Require that there is enough Ether in the transaction
-    require(msg.value >= _event.price);
     // Require that the buyer is not the event owner
     require(_owner != msg.sender);
     // Check if user purchased
@@ -88,14 +81,13 @@ contract ImbuEvents {
       }
     }
 
-    if (isPurchased == false) {
-      subscriberListCount++;
-      subscriberList[subscriberListCount] = Subscriber(_id, msg.sender);
-      // Pay the owner by sending them Ether
-      IERC20(daiAddress).transferFrom(msg.sender, _owner, msg.value);
+    require(isPurchased == false);
 
-      emit EventPurchased(_id, _event.name, _event.price, msg.sender);
-    }
+    IERC20(daiAddress).transferFrom(msg.sender, _owner, _event.price);
+    subscriberListCount++;
+    subscriberList[subscriberListCount] = Subscriber(_id, msg.sender);
+
+    emit EventPurchased(_id, _event.name, _event.price, msg.sender);
   }
 
   function startEvent(uint _id) public {
@@ -104,10 +96,6 @@ contract ImbuEvents {
     events[_id] = _event;
 
     emit EventStarted(_id, _event.name, _event.price, msg.sender);
-  }
-
-  function getDaiBalance(address _address) public view returns(uint balance) {
-    balance = IERC20(daiAddress).balanceOf(_address);
   }
 
 }

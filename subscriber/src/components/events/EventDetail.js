@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { Container, Row, Col } from "react-bootstrap";
 import { withRouter } from 'react-router';
 import ImbueEventsContract from '../../contracts/ImbuEvents.json';
+import DaiContract from '../../contracts/DAI.json';
 import getWeb3 from "../../getWeb3";
 import { injected } from "../wallet/connectors";
 import './EventDetail.css';
@@ -137,7 +138,8 @@ class EventDetail extends Component {
 
     // Load abi and address from testnet
     const imbueEvents = new web3.eth.Contract(ImbueEventsContract.abi, CONTRACT_ADDRESS);
-    this.setState({ web3, accounts, contract: imbueEvents });
+    const daiToken = new web3.eth.Contract(DaiContract, "0xad6d458402f60fd3bd25163575031acdce07538d");
+    this.setState({ web3, accounts, contract: imbueEvents, daiToken: daiToken });
 
     // Load subscriberList
     const subscriberListCount = await imbueEvents.methods.subscriberListCount().call();
@@ -153,7 +155,7 @@ class EventDetail extends Component {
     this.setState({ currentEvent: event });
 
     // check user has enough dai or not.
-    const balance = await this.state.contract.methods.getDaiBalance(this.state.account).call();
+    const balance = await this.state.daiToken.methods.balanceOf(this.state.account).call({from: this.state.account});
     this.setState({ walletBalance: web3.utils.fromWei(balance, "ether")});
     if (parseFloat(balance) < parseFloat(event.price)) {
       this.setState({insufficientFund: true});
@@ -175,15 +177,23 @@ class EventDetail extends Component {
     }*/
 
     // check account balance
-    const balance = await this.state.contract.methods.getDaiBalance(this.state.account).call({from: this.state.account});
+    const balance = await this.state.daiToken.methods.balanceOf(this.state.account).call({from: this.state.account});
     if (parseFloat(balance) < parseFloat(price)) {
       this.setState({insufficientFund: true});
       return;
     }
 
     this.setState({isLoading: true});
+
+    const allowance = await this.state.daiToken.methods.allowance(this.state.account, CONTRACT_ADDRESS).call({from: this.state.account});
+    console.log("allowance", this.state.web3.utils.fromWei(allowance));
+    console.log(this.state.currentEvent.price);
+    //if (this.state.web3.utils.toWei(allowance)< this.state.web3.utils.toWei(this.state.currentEvent.price)) {
+      await this.state.daiToken.methods.approve(CONTRACT_ADDRESS, this.state.currentEvent.price).send({from: this.state.account});
+    //}
+
     let {subscriberList} = this.state
-    this.state.contract.methods.subscribeEvent(id).send({from: this.state.account, value: price})
+    this.state.contract.methods.subscribeEvent(id).send({from: this.state.account})
     .on('receipt', async(receipt) => {
       // redirect to events page
       subscriberList.push({eventId: id, subscriberAddress: receipt.from});
