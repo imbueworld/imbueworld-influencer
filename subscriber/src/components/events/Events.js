@@ -162,7 +162,7 @@ class Events extends Component {
               letterSpacing: 3,
               width: "285px"
               }}>
-              <span>{ Math.round(this.state.walletBalance * 100000) / 100000 + 'ETH' }</span>
+              <span>{ Math.round(this.state.walletBalance * 100000) / 100000 + 'DAI' }</span>
               <span style={{ 
                 marginLeft: 10, 
                 padding: "5px 8px", 
