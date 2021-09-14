@@ -9,6 +9,9 @@ import './EventDetail.css';
 import ethereum from "../../images/ethereum.jpg";
 import videojs from "video.js";
 import videojsqualityselector from "videojs-hls-quality-selector";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
+
 import 'video.js/dist/video-js.css';
 import axios from 'axios';
 import CONTRACT_ADDRESS from '../../common/contracts';
@@ -280,21 +283,26 @@ class EventDetail extends Component {
     const { currentEvent, isLoading, insufficientFund } = this.state;
     const { eventId } = this.props.match.params
 
+
     if (isLoading) {
       return (
         <a href="#" disabled="disabled"
            className="wallet-button"
            style={{
+             display: "inline-block",
+             width: "200px",
              textDecoration: "none",
              letterSpacing: "1.5px",
              color: "#919194",
-             fontSize: 15,
+             fontSize: 22,
              backgroundColor: "#FFFFFF",
              padding: "10px 20px 10px 20px",
              border: "1px solid #000000",
              borderRadius: "20px",
            }}
-        >PURCHASING NOW...</a>
+        >
+          <FontAwesomeIcon icon={faCircleNotch} size="lg" spin />
+        </a>
       );
     } else {
       if(this.checkEventPurchased(eventId)) {

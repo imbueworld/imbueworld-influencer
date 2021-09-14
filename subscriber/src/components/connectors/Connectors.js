@@ -57,7 +57,8 @@ function Connectors() {
   const redirectLink = new URLSearchParams(search).get('redirectLink');
 
   useEffect(() => {
-    if (redirectLink !== '') {
+    console.log('redirectLink', redirectLink);
+    if (redirectLink !== null) {
       setWrongNetwork(true);
     }
   });
@@ -65,6 +66,7 @@ function Connectors() {
   async function connectWallet (e) {
     const chainId = await injected.getChainId();
 
+    console.log('chainId', chainId);
     //if (chainId !== '0xa' && chainId !== '0x45' && chainId !== '0x2a') {
     if (chainId !== '0x3') {
       setWrongNetwork(true);
@@ -74,13 +76,13 @@ function Connectors() {
     setWrongNetwork(false);
     try {
       await activate(injected);
-      if (redirectLink !== '') {
+      if (redirectLink !== null) {
         history.push(redirectLink);
       } else {
         history.push('/events');
       }
     } catch (ex) {
-      console.log(ex)
+      console.log('injecting failed', ex)
     }
   }
 

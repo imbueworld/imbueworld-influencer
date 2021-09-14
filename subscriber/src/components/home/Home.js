@@ -68,7 +68,7 @@ export default function Home() {
             marginTop: 50,
           }}
         >
-          <Link className="wallet-button" to="/event/purchase"
+          <Link className="wallet-button" to="/connectors"
             style={{
               textDecoration: "none",
               letterSpacing: "1.5px",
