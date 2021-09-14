@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { Container, Row, Col, OverlayTrigger, Popover } from "react-bootstrap";
 import ImbueEventsContract from '../../contracts/ImbuEvents.json';
 import getWeb3 from "../../getWeb3";
@@ -49,22 +49,24 @@ class Events extends Component {
   }
 
   startEvent = (id) => {
-    let {events} = this.state;
-    this.state.contract.methods.startEvent(id).send({from: this.state.account})
-    .on('receipt', () => {
-      events.filter((event) => event.id === id).map((event) => {
-        event.isStarted = true;
-        event[8] = true;
-      })
-      this.setState({ events: events });
-      console.log('receipt');
-    })
-    .on('confirmation', (receipt) => {
-      console.log('event subscribed');
-    })
-    .on('error', function(error, receipt){
-      console.log(error);
-    })
+    // let {events} = this.state;
+    // this.state.contract.methods.startEvent(id).send({from: this.state.account})
+    // .on('receipt', () => {
+    //   events.filter((event) => event.id === id).map((event) => {
+    //     event.isStarted = true;
+    //     event[8] = true;
+    //   })
+    //   this.setState({ events: events });
+    //   console.log('receipt');
+    // })
+    // .on('confirmation', (receipt) => {
+    //   console.log('event subscribed');
+    // })
+    // .on('error', function(error, receipt){
+    //   console.log(error);
+    // })
+
+    this.props.history.push(`/event/${id}`);
   }
 
   goEventDetail = (event) => {
@@ -231,4 +233,4 @@ class Events extends Component {
   }
 }
 
-export default Events;
+export default withRouter(Events);
