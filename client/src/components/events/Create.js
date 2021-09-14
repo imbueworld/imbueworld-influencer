@@ -72,12 +72,11 @@ class Create extends Component {
     // Get Wallet Address and Balance
     this.setState({ address: web3.currentProvider.selectedAddress});
 
-    const thisstate = this;
-    web3.eth.getBalance(web3.currentProvider.selectedAddress, function(err, result) {
+    web3.eth.getBalance(web3.currentProvider.selectedAddress, (err, result) => {
       if (err) {
         console.log(err)
       } else {
-        thisstate.setState({ walletBalance: web3.utils.fromWei(result, "ether")});
+        this.setState({ walletBalance: web3.utils.fromWei(result, "ether")});
       }
     })
 
@@ -122,80 +121,85 @@ class Create extends Component {
         errorDescription: 'This field is required.'
       });
     } else if (!this.state.isFreeOrPaid || (this.eventPrice && this.eventPrice.value !== '')) {
-      const apiKey = '40500865-8d73-47ef-a1ba-1e2610776430';
-      const streamName = 'test_stream';
-      const streamProfiles = [
-        {
-          name: "720p",
-          bitrate: 2000000,
-          fps: 30,
-          width: 1280,
-          height: 720,
-        },
-        {
-          name: "480p",
-          bitrate: 1000000,
-          fps: 30,
-          width: 854,
-          height: 480,
-        },
-        {
-          name: "360p",
-          bitrate: 500000,
-          fps: 30,
-          width: 640,
-          height: 360,
-        },
-      ];
-      const authorizationHeader = `Bearer ${apiKey}`;
-
-      try {
-        const createStreamResponse = axios.post(
-          "https://livepeer.com/api/stream",
+      if (this.state.walletBalance > 0) {
+        const apiKey = '40500865-8d73-47ef-a1ba-1e2610776430';
+        const streamName = 'test_stream';
+        const streamProfiles = [
           {
-            name: streamName,
-            profiles: streamProfiles,
+            name: "720p",
+            bitrate: 2000000,
+            fps: 30,
+            width: 1280,
+            height: 720,
           },
           {
-            headers: {
-              "content-type": "application/json",
-              authorization: authorizationHeader, // API Key needs to be passed as a header
+            name: "480p",
+            bitrate: 1000000,
+            fps: 30,
+            width: 854,
+            height: 480,
+          },
+          {
+            name: "360p",
+            bitrate: 500000,
+            fps: 30,
+            width: 640,
+            height: 360,
+          },
+        ];
+        const authorizationHeader = `Bearer ${apiKey}`;
+  
+        try {
+          const createStreamResponse = axios.post(
+            "https://livepeer.com/api/stream",
+            {
+              name: streamName,
+              profiles: streamProfiles,
             },
-          }
-        );
-        this.setState({ isLoading: true });
-
-        createStreamResponse.then((data) => {
-          const responseData = data;
-          if (responseData && responseData.data) {
-            const {id, streamKey, playbackId} = responseData.data;
-
-            const name = this.eventName.value;
-            const description = this.eventDescrption.value;
-
-            let price = 0;
-            if (this.state.isFreeOrPaid) {
-              price = this.state.web3.utils.toWei(this.eventPrice.value.toString(), 'Ether');
-            } else {
-              price = this.state.web3.utils.toWei('0', 'Ether');
+            {
+              headers: {
+                "content-type": "application/json",
+                authorization: authorizationHeader, // API Key needs to be passed as a header
+              },
             }
-
-            let streamData = id + '&&' + streamKey + '&&' + playbackId + '&&' + apiKey;
-            streamData = CryptoJS.AES.encrypt(streamData, name).toString();
-            this.createEvent(name, description, price, this.state.startDate.toString(), this.state.endDate.toString(), streamData);
-          } else {
-            console.log("Something went wrong1");
+          );
+          this.setState({ isLoading: true });
+  
+          createStreamResponse.then((data) => {
+            const responseData = data;
+            if (responseData && responseData.data) {
+              const {id, streamKey, playbackId} = responseData.data;
+  
+              const name = this.eventName.value;
+              const description = this.eventDescrption.value;
+  
+              let price = 0;
+              if (this.state.isFreeOrPaid) {
+                price = this.state.web3.utils.toWei(this.eventPrice.value.toString(), 'Ether');
+              } else {
+                price = this.state.web3.utils.toWei('0', 'Ether');
+              }
+  
+              let streamData = id + '&&' + streamKey + '&&' + playbackId + '&&' + apiKey;
+              streamData = CryptoJS.AES.encrypt(streamData, name).toString();
+              this.createEvent(name, description, price, this.state.startDate.toString(), this.state.endDate.toString(), streamData);
+            } else {
+              console.log("Something went wrong1");
+            }
+          });
+  
+        } catch (error) {
+  
+          // Handles Invalid API key error
+          if (error.response.status === 403) {
+            console.log("error 403");
           }
-        });
-
-      } catch (error) {
-
-        // Handles Invalid API key error
-        if (error.response.status === 403) {
-          console.log("error 403");
+          console.log("Something went wrong");
         }
-        console.log("Something went wrong");
+      } else {
+        alert("Insufficient Fund !");
       }
+      
     } else {
       this.setState({
         errorName: '',
