@@ -212,6 +212,8 @@ class Create extends Component {
         <Container
           className='MyContainer'
           style={{
+            display: 'block',
+            margin: 'auto',
             justifyContent: "center",
             alignContent: "center",
             alignItems: "center",
